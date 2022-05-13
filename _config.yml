@@ -1,0 +1,9 @@
+# Site Settings
+locale                   : "en-US"
+title                    : "Pollen"
+title_separator          : "-"
+subtitle                 : # site tagline that appears below site title in masthead
+name                     : "Pollen"
+description              : "꽃가루농도위험지수"
+url                      : "https://wooseobee.github.io/pollen"
+baseurl                  : ""

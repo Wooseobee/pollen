@@ -34,27 +34,19 @@
                 ].join(',')
             }, function (status, response) {
                 if (status === naver.maps.Service.Status.ERROR) {
-                    if (!latlng) {
-                        return alert('ReverseGeocode Error, Please check latlng');
-                    }
-                    if (latlng.toString) {
-                        return alert('ReverseGeocode Error, latlng:' + latlng.toString());
-                    }
-                    if (latlng.x && latlng.y) {
-                        return alert('ReverseGeocode Error, x:' + latlng.x + ', y:' + latlng.y);
-                    }
-                    return alert('ReverseGeocode Error, Please check latlng');
+                    return alert('Something Wrong!');
                 }
 
-                var address = response.v2.address,
+                var items = response.v2.results,
+                    address = '',
                     htmlAddresses = [];
 
-                if (address.jibunAddress !== '') {
-                    htmlAddresses.push('[지번 주소] ' + address.jibunAddress);
-                }
+                for (var i = 0, ii = items.length, item, addrType; i < ii; i++) {
+                    item = items[i];
+                    address = makeAddress(item) || '';
+                    addrType = item.name === 'roadaddr' ? '[도로명 주소]' : '[지번 주소]';
 
-                if (address.roadAddress !== '') {
-                    htmlAddresses.push('[도로명 주소] ' + address.roadAddress);
+                    htmlAddresses.push((i + 1) + '. ' + addrType + ' ' + address);
                 }
 
                 infoWindow.setContent([
@@ -73,14 +65,11 @@
                 query: address
             }, function (status, response) {
                 if (status === naver.maps.Service.Status.ERROR) {
-                    if (!address) {
-                        return alert('Geocode Error, Please check address');
-                    }
-                    return alert('Geocode Error, address:' + address);
+                    return alert('Something Wrong!');
                 }
 
                 if (response.v2.meta.totalCount === 0) {
-                    return alert('No result.');
+                    return alert('totalCount' + response.v2.meta.totalCount);
                 }
 
                 var htmlAddresses = [],
@@ -132,6 +121,7 @@
 
             searchAddressToCoordinate('정자동 178-1');
         }
+        
         function makeAddress(item) {
             if (!item) {
                 return;

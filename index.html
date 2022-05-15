@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
-    <title>간단한 지도 표시하기</title>
-    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=tpza15dd8w"></script>
+    <title>주소와 좌표 검색 api 이용해 지도에 나타내기</title>
+    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=tpza15dd8w&submodules=geocoder"></script>
     <style>
         html, body { height: 100%; }
     </style>
@@ -73,7 +73,7 @@
                 });
             }
 
-            function searchAddressToCoordinate(address) {
+        function searchAddressToCoordinate(address) {
                 naver.maps.Service.geocode({
                     query: address
                 }, function (status, response) {
@@ -116,30 +116,29 @@
                 });
             }
 
-            function initGeocoder() {
-                map.addListener('click', function (e) {
-                    searchCoordinateToAddress(e.coord);
-                });
+        function initGeocoder() {
+            map.addListener('click', function (e) {
+                searchCoordinateToAddress(e.coord);
+            });
 
-                $('#address').on('keydown', function (e) {
-                    var keyCode = e.which;
+            $('#address').on('keydown', function (e) {
+                var keyCode = e.which;
 
-                    if (keyCode === 13) { // Enter Key
-                        searchAddressToCoordinate($('#address').val());
-                    }
-                });
-
-                $('#submit').on('click', function (e) {
-                    e.preventDefault();
-
+                if (keyCode === 13) { // Enter Key
                     searchAddressToCoordinate($('#address').val());
-                });
+                }
+            });
 
-                searchAddressToCoordinate('정자동 178-1');
-            }
+            $('#submit').on('click', function (e) {
+                e.preventDefault();
 
-            naver.maps.onJSContentLoaded = initGeocoder;
+                searchAddressToCoordinate($('#address').val());
+            });
 
+            searchAddressToCoordinate('정자동 178-1');
+        }
+
+        naver.maps.onJSContentLoaded = initGeocoder;
 
         var marker = new naver.maps.Marker({
             position: new naver.mpas.Latlng(37.3595704, 127.105399),

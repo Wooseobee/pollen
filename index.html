@@ -34,6 +34,7 @@
             box-sizing: content-box;
         }
     </style>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
     <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=tpza15dd8w&submodules=geocoder"></script>
 </head>
 <body>
@@ -168,6 +169,7 @@
                 searchAddressToCoordinate('정자동 178-1');
             }
 
+
         naver.maps.onJSContentLoaded = initGeocoder;
 
         var marker = new naver.maps.Marker({
@@ -177,6 +179,7 @@
 
         naver.maps.Event.addListener(map, 'click', function(e) {
             marker.setPosition(e.latlng);
+            e.coord.lat()
         });
     </script>
 </body>

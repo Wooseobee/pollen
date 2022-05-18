@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            display: inline;
+            position: absolute;
+        }
+        td, th {
+            text-align: center;
+            padding: 10px;
+            height: 20px;
+            width: 200px;
+            border: 1px solid black;
+        }
+        thead, tfoot {
+            background-color: lightgray;
+        }
+    </style>
+</head>
+<body>
+    <div style="text-align: center;">
+        <div style="display: inline-block; float: left; margin-right: 50px; width: 50%; position: relative; border: 2px solid white;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>단계</th>
+                        <th>지수범위</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>낮음</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>보통</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td>높음</td>
+                        <td>2</td>
+                    </tr>
+                    <tr>
+                        <td>매우높음</td>
+                        <td>3</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div style="display: inline-block; width: 40%; height: 200px; position: relative;">
+            <div style="text-align: left; position: absolute; top: 35%;">꽃가루농도위험지수(참나무) : </div>
+            <div style="text-align: left; position: absolute; top: 45%;">꽃가루농도위험지수(소나무) : </div>
+            <div style="text-align: left; position: absolute; top: 55%;">꽃가루농도위험지수(잡초류) : </div>
+        </div>
+    </div>
+</body>
+</html>

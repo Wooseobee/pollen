@@ -123,6 +123,13 @@
                 document.getElementById('address').value = null;
             });
         });
+
+        $(window).resize(function() {
+            var mapContainer = document.getElementById('map');
+            mapContainer.style.width = $(window).width;
+            mapContainer.style.height = $(window).height;
+            map.relayout();
+        })
     </script>
 </body>
 

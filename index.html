@@ -10,7 +10,7 @@
 </head>
 
 <body>
-    <div class="search" style="">
+    <div class="search" style="text-align: center;">
         <input id="address" type="text" placeholder="검색할 주소" value="" />
         <input id="submit" type="button" value="주소 검색"/>
     </div>
@@ -33,6 +33,8 @@
         var coords = null;
 
         var place = null;
+
+        var flag = 0; // 주소검색인지 키워드검색인지 구분
         $('#submit').click(function(){
 
             // 주소로 좌표를 검색합니다
@@ -40,6 +42,7 @@
 
                 // 정상적으로 검색이 완료됐으면 
                 if (status === kakao.maps.services.Status.OK) {
+                    flag = 0;
 
                     coords = new kakao.maps.LatLng(result[0].y, result[0].x);
 
@@ -76,6 +79,8 @@
                     map.setCenter(coords);
                 }
                 else {
+
+                    flag = 1;
                     // 장소 검색 객체를 생성합니다
                     var ps = new kakao.maps.services.Places();
 
@@ -135,10 +140,10 @@
             var mapContainer = document.getElementById('map');
             clearTimeout(timer);
             timer = setTimeout(function () {
-                if(coords!=null){
+                if(flag==0){
                     map.setCenter(coords);
                 }
-                if(place!=null){
+                else if(flag==1){
                     map.setCenter(place);
                 }
             }, delay);

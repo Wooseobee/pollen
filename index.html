@@ -86,7 +86,7 @@
                     function placesSearchCB(data, status, pagination) {
                         if (status === kakao.maps.services.Status.OK) {
 
-                            place = data[0];
+                            place = new kakao.maps.LatLng(data[0].y, data[0].x);
 
                             // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
                             // LatLngBounds 객체에 좌표를 추가합니다
@@ -139,7 +139,7 @@
                     map.setCenter(coords);
                 }
                 if(place!=null){
-                    map.setCenter(kakao.maps.LatLng(place.y, place.x));
+                    map.setCenter(place);
                 }
             }, delay);
         })

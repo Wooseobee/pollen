@@ -5,7 +5,10 @@
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <script src="http://code.jquery.com/jquery-latest.js"></script> 
     <title>주소로 장소 표시하기</title>
-    <style>html, body { height: 100%;}</style>
+    <style>
+    html, body { height: 100%;}
+    input { line-height: 50px;}
+    </style>
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=f1b6ed2e1d208736a93f48c704aa9498&libraries=services"></script>
     <script type="text/javascript">
         $(document).ready(function() {
@@ -16,13 +19,13 @@
 
 <body>
     <div class="search" style="text-align: center;">
-        <input id="address" type="text" placeholder="검색할 주소" value="" />
+        <input id="address" type="text" placeholder="검색할 주소" value=""/>
         <input id="submit" type="button" value="주소 검색"/>
     </div>
-    <div id="map" style="width:100%;height:50%;">
+    <div id="map" style="width:100%;height:60%;">
     </div>
 
-    <div id="info"></div>
+    <div id="info" style="text-align: center;"></div>
 
     <script>
         var mapContainer = document.getElementById('map'), // 지도를 표시할 div 

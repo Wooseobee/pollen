@@ -24,14 +24,16 @@
                 level: 3 // 지도의 확대 레벨
             };
 
+        // 지도를 생성합니다    
+        var map = new kakao.maps.Map(mapContainer, mapOption);
+
+        // 주소-좌표 변환 객체를 생성합니다
+        var geocoder = new kakao.maps.services.Geocoder();
+
+        var coords = null;
+
+        var place = null;
         $('#submit').click(function(){
-
-            // 지도를 생성합니다    
-            var map = new kakao.maps.Map(mapContainer, mapOption);
-
-            // 주소-좌표 변환 객체를 생성합니다
-            var geocoder = new kakao.maps.services.Geocoder();
-
 
             // 주소로 좌표를 검색합니다
             geocoder.addressSearch($('#address').val(), function (result, status) {
@@ -39,7 +41,7 @@
                 // 정상적으로 검색이 완료됐으면 
                 if (status === kakao.maps.services.Status.OK) {
 
-                    var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+                    coords = new kakao.maps.LatLng(result[0].y, result[0].x);
 
                     // 추출한 좌표를 통해 도로명 주소 추출
                     let lat = result[0].y;
@@ -98,6 +100,7 @@
 
                     // 지도에 마커를 표시하는 함수입니다
                     function displayMarker(place) {
+                        place = this.place;
 
                         // 마커를 생성하고 지도에 표시합니다
                         var marker = new kakao.maps.Marker({
@@ -124,11 +127,20 @@
             });
         });
 
-        $(window).resize(function() {
+        var timer = null;
+        var delay = 300;
+
+        $(window).resize(function () {
             var mapContainer = document.getElementById('map');
-            mapContainer.style.width = $(window).width;
-            mapContainer.style.height = $(window).height;
-            map.relayout();
+            clearTimeout(timer);
+            timer = setTimeout(function () {
+                if(coords!=null){
+                    map.setCenter(coords);
+                }
+                if(place!=null){
+                    map.setCenter(kakao.maps.LatLng(place.y, place.x));
+                }
+            }, delay);
         })
     </script>
 </body>

@@ -128,21 +128,21 @@
             });
         });
 
-        // var timer = null;
-        // var delay = 300;
+        var timer = null;
+        var delay = 300;
 
-        // $(window).resize(function () {
-        //     var mapContainer = document.getElementById('map');
-        //     clearTimeout(timer);
-        //     timer = setTimeout(function () {
-        //         if(coords!=null){
-        //             map.setCenter(coords);
-        //         }
-        //         if(place!=null){
-        //             map.setCenter(kakao.maps.LatLng(place.y, place.x));
-        //         }
-        //     }, delay);
-        // })
+        $(window).resize(function () {
+            var mapContainer = document.getElementById('map');
+            clearTimeout(timer);
+            timer = setTimeout(function () {
+                if(coords!=null){
+                    map.setCenter(coords);
+                }
+                if(place!=null){
+                    map.setCenter(kakao.maps.LatLng(place.y, place.x));
+                }
+            }, delay);
+        })
     </script>
 </body>
 

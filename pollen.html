@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <!-- <script src="http://code.jquery.com/jquery-latest.js"></script>  -->
+</head>
+<body>
+    <script>
+        var xhr = new XMLHttpRequest();
+        var url = 'https://cors-anywhere.herokuapp.com/http://apis.data.go.kr/1360000/HealthWthrIdxServiceV2/getOakPollenRiskIdxV2'; /*URL*/
+        var queryParams = '?' + encodeURIComponent('serviceKey') + '=' + 'h9LeXhaL6HnBJDW%2BmFYwoaQzexQrSgGK%2BjpLUNe%2BJwcD%2FhpbdvzrgkdmsQYh7wxno25wIg6jaFWaSzZP1S4TIQ%3D%3D'; /*Service Key*/
+        queryParams += '&' + encodeURIComponent('pageNo') + '=' + encodeURIComponent('1'); /*페이지번호*/
+        queryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent('10'); /*한 페이지 결과 수*/
+        queryParams += '&' + encodeURIComponent('dataType') + '=' + encodeURIComponent('JSON'); /*요청자료형식(XML/JSON)*/
+        queryParams += '&' + encodeURIComponent('areaNo') + '=' + encodeURIComponent('1100000000'); /*서울지점*/
+        queryParams += '&' + encodeURIComponent('time') + '=' + encodeURIComponent('2022051818'); /*‘21년 7월 6일 18시 발표*/
+        xhr.open('GET', url + queryParams);
+        xhr.send();
+        xhr.onreadystatechange = function () {
+            if (this.readyState == 4) {
+                console.log(this);
+                //alert('Status: ' + this.status + ' Headers: ' + JSON.stringify(this.getAllResponseHeaders()) + ' Body: ' + this.responseText);
+            }
+        };
+    </script>
+</body>
+</html>

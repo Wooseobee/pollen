@@ -18,14 +18,14 @@
 </head>
 
 <body>
-    <div class="search" style="text-align: center;">
+    <div class="search" style="text-align: center; padding-bottom: 20px;">
         <input id="address" type="text" placeholder="검색할 주소" value="" size="30" style="line-height: 30px; font-size: 20px;"/>
-        <input id="submit" type="button" value="주소 검색" style="height: 50px; font-size:20px;"/>
+        <input id="submit" type="button" value="주소 검색" style="height: 30px; font-size:20px;"/>
     </div>
-    <div id="map" style="width:100%;height:60%;">
+    <div id="map" style="width:100%;height:60%; padding: 10px;">
     </div>
 
-    <div id="info" style="text-align: center;"></div>
+    <div id="info" style="text-align: center; padding: 30px;"></div>
 
     <script>
         var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
@@ -44,8 +44,27 @@
 
         var place = null;
 
+        var markers = []; // 마커 전체적으로 통제
+
+        var infoWindows = [];    // infoWindow 전체적으로 통제
+
         var flag = 0; // 주소검색인지 키워드검색인지 구분
         $('#submit').click(function(){
+
+            // 기존의 마커 제거
+            if(markers.length!=0){
+                for (var i = 0; i < markers.length; i++) {
+                    markers[i].setMap(null);
+                }
+            }
+
+            // 기존의 infoWindow 제거
+            if(infoWindows.length!=0){
+                for (var i = 0; i < infoWindows.length; i++) {
+                    infoWindows[i].close();
+                    console.log('dd');
+                }
+            }
 
             // 주소로 좌표를 검색합니다
             geocoder.addressSearch($('#address').val(), function (result, status) {
@@ -80,10 +99,13 @@
 
                     // 인포윈도우로 장소에 대한 설명을 표시합니다
                     var infowindow = new kakao.maps.InfoWindow({
-                        content: '<div id="place";style="width:150px;text-align:center;padding:6px 0;">' + $('#address').val() + '</div>'
+                        content: '<div id="place" style="width:150px;text-align:center;padding:6px 0;">' + $('#address').val() + '</div>'
                     });
                     marker.setMap(map);
+                    markers.push(marker);   // 생성된 마커를 배열에 추가
+
                     infowindow.open(map, marker);
+                    infoWindows.push(infowindow);   // 생성된 infoWindow 배열에 추가
 
                     // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
                     map.setCenter(coords);
@@ -126,10 +148,13 @@
 
                         // 인포윈도우로 장소에 대한 설명을 표시합니다
                         var infowindow = new kakao.maps.InfoWindow({
-                            content: '<div id="place";style="width:150px;text-align:center;padding:6px 0;">' + $('#address').val() + '</div>'
+                            content: '<div id="place1" style="width:150px; text-align:center; padding:6px 0;">' + place.place_name + '</div>'
                         });
                         marker.setMap(map);
+                        markers.push(marker);   // 생성된 마커를 배열에 추가
+
                         infowindow.open(map, marker);
+                        infoWindows.push(infowindow);   // 생성된 infoWindow 배열에 추가
 
                         // 마커에 클릭이벤트를 등록합니다
                         // kakao.maps.event.addListener(marker, 'click', function () {
@@ -139,10 +164,12 @@
                         // });
                     }
                 }
-                document.getElementById('address').value = null;
+
+                document.getElementById('address').value = null;    // 주소 검색 창 리셋
             });
         });
 
+        // 창 크기 조절 중 함수 실행 금지
         var timer = null;
         var delay = 300;
 

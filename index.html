@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
-    <script src="http://code.jquery.com/jquery-latest.js"></script> 
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
     <title>주소로 장소 표시하기</title>
     <style>
     html, body { height: 100%;}
@@ -185,6 +185,26 @@
                 }
             }, delay);
         })
+    </script>
+    <script>
+        var xhr = new XMLHttpRequest();
+        var url = 'https://cors-anywhere.herokuapp.com/http://apis.data.go.kr/1360000/HealthWthrIdxServiceV2/getOakPollenRiskIdxV2'; /*URL*/
+        var queryParams = '?' + encodeURIComponent('serviceKey') + '=' + 'h9LeXhaL6HnBJDW%2BmFYwoaQzexQrSgGK%2BjpLUNe%2BJwcD%2FhpbdvzrgkdmsQYh7wxno25wIg6jaFWaSzZP1S4TIQ%3D%3D'; /*Service Key*/
+        queryParams += '&' + encodeURIComponent('pageNo') + '=' + encodeURIComponent('1'); /*페이지번호*/
+        queryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent('10'); /*한 페이지 결과 수*/
+        queryParams += '&' + encodeURIComponent('dataType') + '=' + encodeURIComponent('JSON'); /*요청자료형식(XML/JSON)*/
+        queryParams += '&' + encodeURIComponent('areaNo') + '=' + encodeURIComponent('1100000000'); /*서울지점*/
+        queryParams += '&' + encodeURIComponent('time') + '=' + encodeURIComponent('2022051818'); /*‘22년 5월 18일 18시 발표*/
+        xhr.open('GET', url + queryParams);
+        xhr.send();
+        xhr.onreadystatechange = function () {
+            if (this.readyState == 4) {
+                var obj = JSON.parse(this.responseText);
+                console.log(obj.response.body.items.item[0])
+                console.log(obj.response.body.items.item[0].today , obj.response.body.items.item[0].tomorrow, obj.response.body.items.item[0].twodaysaftertomorrow);
+                // alert('Status: ' + this.status + ' Headers: ' + JSON.stringify(this.getAllResponseHeaders()) + ' Body: ' + this.responseText);
+            }
+        };
     </script>
 </body>
 

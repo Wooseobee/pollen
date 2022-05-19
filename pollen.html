@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <title>Document</title>
-    <!-- <script src="http://code.jquery.com/jquery-latest.js"></script>  -->
+    <script src="http://code.jquery.com/jquery-latest.js"></script> 
 </head>
 <body>
     <script>
@@ -14,13 +15,15 @@
         queryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent('10'); /*한 페이지 결과 수*/
         queryParams += '&' + encodeURIComponent('dataType') + '=' + encodeURIComponent('JSON'); /*요청자료형식(XML/JSON)*/
         queryParams += '&' + encodeURIComponent('areaNo') + '=' + encodeURIComponent('1100000000'); /*서울지점*/
-        queryParams += '&' + encodeURIComponent('time') + '=' + encodeURIComponent('2022051818'); /*‘21년 7월 6일 18시 발표*/
+        queryParams += '&' + encodeURIComponent('time') + '=' + encodeURIComponent('2022051818'); /*‘22년 5월 18일 18시 발표*/
         xhr.open('GET', url + queryParams);
         xhr.send();
         xhr.onreadystatechange = function () {
             if (this.readyState == 4) {
-                console.log(this);
-                //alert('Status: ' + this.status + ' Headers: ' + JSON.stringify(this.getAllResponseHeaders()) + ' Body: ' + this.responseText);
+                var obj = JSON.parse(this.responseText);
+                console.log(obj.response.body.items.item[0])
+                console.log(obj.response.body.items.item[0].today , obj.response.body.items.item[0].tomorrow, obj.response.body.items.item[0].twodaysaftertomorrow);
+                // alert('Status: ' + this.status + ' Headers: ' + JSON.stringify(this.getAllResponseHeaders()) + ' Body: ' + this.responseText);
             }
         };
     </script>

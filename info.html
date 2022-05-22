@@ -4,26 +4,60 @@
     <meta charset="UTF-8">
     <title>Document</title>
     <style>
+        body { text-align: center;}
         table {
             border-collapse: collapse;
-            display: inline;
-            position: absolute;
         }
         td, th {
             text-align: center;
             padding: 10px;
             height: 20px;
-            width: 200px;
+            width: 100px;
             border: 1px solid black;
         }
         thead, tfoot {
             background-color: lightgray;
         }
+        div {
+            display: inline-block;
+        }
     </style>
 </head>
 <body>
-    <div style="text-align: center;">
-        <div style="display: inline-block; float: left; margin-right: 50px; width: 50%; position: relative; border: 2px solid white;">
+    <div>
+        <div style="float: left; border: 2px solid white;">
+            <table id="table">
+                <thead>
+                    <tr>
+                        <th>종류</th>
+                        <th>오늘</th>
+                        <th>내일</th>
+                        <th>모레</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>꽃가루농도위험지수(참나무)</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>꽃가루농도위험지수(소나무)</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>높꽃가루농도위험지수(잡초류)</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div style=" float: left; border: 2px solid white; margin-left: 50px; margin-top: 50px;">
             <table>
                 <thead>
                     <tr>
@@ -50,11 +84,6 @@
                     </tr>
                 </tbody>
             </table>
-        </div>
-        <div style="display: inline-block; width: 40%; height: 200px; position: relative;">
-            <div style="text-align: left; position: absolute; top: 35%;">꽃가루농도위험지수(참나무) : </div>
-            <div style="text-align: left; position: absolute; top: 45%;">꽃가루농도위험지수(소나무) : </div>
-            <div style="text-align: left; position: absolute; top: 55%;">꽃가루농도위험지수(잡초류) : </div>
         </div>
     </div>
 </body>

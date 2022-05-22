@@ -4,6 +4,8 @@
     <meta charset="utf-8">
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+    <script src="./area.js"></script>
     <title>주소로 장소 표시하기</title>
     <style>
     html, body { height: 100%;}
@@ -48,6 +50,14 @@
 
         var infoWindows = [];    // infoWindow 전체적으로 통제
 
+        var latlng = null;
+
+        var city = null;    // 시 단위로 지점 검색
+
+        var gu = null;    // 구 단위로 지점 검색
+
+        var code = null;    // 지점 코드
+
         var flag = 0; // 주소검색인지 키워드검색인지 구분
         $('#submit').click(function(){
 
@@ -62,7 +72,6 @@
             if(infoWindows.length!=0){
                 for (var i = 0; i < infoWindows.length; i++) {
                     infoWindows[i].close();
-                    console.log('dd');
                 }
             }
 
@@ -75,22 +84,10 @@
 
                     coords = new kakao.maps.LatLng(result[0].y, result[0].x);
 
-                    // 추출한 좌표를 통해 도로명 주소 추출
                     let lat = result[0].y;
                     let lng = result[0].x;
-                    getAddr(lat,lng);
-                    function getAddr(lat,lng){
-                        let geocoder = new kakao.maps.services.Geocoder();
-        
-                        let coord = new kakao.maps.LatLng(lat, lng);
-                        let callback = function(result, status) {
-                            if (status === kakao.maps.services.Status.OK) {
-                                // 추출한 도로명 주소를 해당 input의 value값으로 적용
-                                $('#address').val(result[0].road_address.address_name);
-                            }
-                        }
-                        geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
-                    }
+                    getAddr(lat,lng);   // 추출한 좌표를 통해 도로명 주소 추출
+                    
                     // 결과값으로 받은 위치를 마커로 표시합니다
                     var marker = new kakao.maps.Marker({
                         map: map,
@@ -125,6 +122,8 @@
 
                             place = new kakao.maps.LatLng(data[0].y, data[0].x);
 
+                            getAddr(data[0].y, data[0].x);
+
                             // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
                             // LatLngBounds 객체에 좌표를 추가합니다
                             var bounds = new kakao.maps.LatLngBounds();
@@ -134,6 +133,7 @@
 
                             // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
                             map.setBounds(bounds);
+                            // console.log(data);
                         }
                     }
 
@@ -152,19 +152,126 @@
                         });
                         marker.setMap(map);
                         markers.push(marker);   // 생성된 마커를 배열에 추가
+                        latlng = marker.getPosition();
 
                         infowindow.open(map, marker);
                         infoWindows.push(infowindow);   // 생성된 infoWindow 배열에 추가
-
-                        // 마커에 클릭이벤트를 등록합니다
-                        // kakao.maps.event.addListener(marker, 'click', function () {
-                        // 마커를 클릭하면 장소명이 인포윈도우에 표출됩니다
-                        //     infowindow.setContent('<div style="padding:5px;font-size:12px;">' + $('#address').val() + '</div>');
-                        //     infowindow.open(map, marker);
-                        // });
                     }
                 }
+                function getAddr(lat,lng){
+                    let geocoder = new kakao.maps.services.Geocoder();
+    
+                    let coord = new kakao.maps.LatLng(lat, lng);
+                    let callback = function(result, status) {
+                        if (status === kakao.maps.services.Status.OK) {
+                            // 추출한 도로명 주소를 해당 input의 value값으로 적용
+                            console.log(result);
+                            let str;
+                            if(result[0].road_address==null) {      // 도로명 주소 유무
+                                $('#address').val(result[0].address.address_name);
+                                str = result[0].address.address_name;
+                                gu = result[0].address.region_2depth_name;
+                            }
+                            else {
+                                $('#address').val(result[0].road_address.address_name);
+                                str = result[0].road_address.address_name;
+                                gu = result[0].road_address.region_2depth_name;
+                            }
+                            city = str.split(' ', 1)[0];
+                            if(city =='서울')
+                                city += '특별시';
+                            console.log(city, gu);
+                            requestData();
+                        }
+                    }
+                    geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
+                }
 
+                function requestData() {
+                    var date = new Date();  // 현재 시간 설정
+                    var todayDate = date.toISOString().substring(0,10).replace(/-/g,'');
+
+                    var today;
+                    var tomorrow;
+                    var dayaftertomorrow;
+
+                    var yesterday = new Date(date.setDate(date.getDate() - 1));	// 어제
+                    yesterday = yesterday.toISOString().substring(0,10).replace(/-/g,'');
+                    
+                    if(date.getHours()<6){     // 06시 이전
+                        todayDate = yesterday;
+                        todayDate += '18';
+                    }
+                    else {      // 06시 이후
+                        todayDate += '06';
+                    }
+
+                    for (let index = 0; index < area.length; index++) {
+                        const depth1 = area[index]['1단계'];
+                        const depth2 = area[index]['2단계'];
+                        if(depth1 == city && depth2 == gu) {
+                            code = area[index]['행정구역코드'];
+                            console.log(area[index]['2단계'], area[index]['행정구역코드']);
+                        }
+                    }
+
+                    var xhr = new XMLHttpRequest();
+                    var url1 = 'https://cors-anywhere.herokuapp.com/http://apis.data.go.kr/1360000/HealthWthrIdxServiceV2/getOakPollenRiskIdxV2'; /*URL1*/
+                    var url2 = 'https://cors-anywhere.herokuapp.com/http://apis.data.go.kr/1360000/HealthWthrIdxServiceV2/getPinePollenRiskIdxV2'; /*URL2*/
+                    var url3 = 'https://cors-anywhere.herokuapp.com/http://apis.data.go.kr/1360000/HealthWthrIdxServiceV2/getWeedsPollenRiskndxV2'; /*URL3*/
+                    var queryParams = '?' + encodeURIComponent('serviceKey') + '=' + 'h9LeXhaL6HnBJDW%2BmFYwoaQzexQrSgGK%2BjpLUNe%2BJwcD%2FhpbdvzrgkdmsQYh7wxno25wIg6jaFWaSzZP1S4TIQ%3D%3D'; /*Service Key*/
+                    queryParams += '&' + encodeURIComponent('pageNo') + '=' + encodeURIComponent('1'); /*페이지번호*/
+                    queryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent('10'); /*한 페이지 결과 수*/
+                    queryParams += '&' + encodeURIComponent('dataType') + '=' + encodeURIComponent('JSON'); /*요청자료형식(XML/JSON)*/
+                    queryParams += '&' + encodeURIComponent('areaNo') + '=' + encodeURIComponent(code); /*지점코드*/
+                    queryParams += '&' + encodeURIComponent('time') + '=' + encodeURIComponent(todayDate); /*22년 5월 18일 18시 발표*/
+                    if(parseInt(todayDate.substring(4,6))>=4 && parseInt(todayDate.substring(4,6))<=6){
+                        xhr.open('GET', url1 + queryParams);      // 참나무
+                        xhr.send();
+                        xhr.onreadystatechange = function () {
+                            if (this.readyState == 4) {
+                                var obj = JSON.parse(this.responseText);
+                                today = obj.response.body.items.item[0].today;
+                                tomorrow = obj.response.body.items.item[0].tomorrow;
+                                dayaftertomorrow = obj.response.body.items.item[0].dayaftertomorrow;
+                                $("#table tr:eq(1) td:eq(1)").html(today);
+                                $("#table tr:eq(1) td:eq(2)").html(tomorrow);
+                                $("#table tr:eq(1) td:eq(3)").html(dayaftertomorrow);
+                            }
+                        };
+                    }
+                    if(parseInt(todayDate.substring(4,6))>=4 && parseInt(todayDate.substring(4,6))<=6){
+                        xhr.open('GET', url2 + queryParams);     // 소나무
+                        xhr.send();
+                        xhr.onreadystatechange = function () {
+                            if (this.readyState == 4) {
+                                var obj = JSON.parse(this.responseText);
+                                today = obj.response.body.items.item[0].today;
+                                tomorrow = obj.response.body.items.item[0].tomorrow;
+                                dayaftertomorrow = obj.response.body.items.item[0].dayaftertomorrow;
+                                $("#table tr:eq(2) td:eq(1)").html(today);
+                                $("#table tr:eq(2) td:eq(2)").html(tomorrow);
+                                $("#table tr:eq(2) td:eq(3)").html(dayaftertomorrow);
+                                console.log(obj)
+                            }
+                        };
+                    }
+                    if(parseInt(todayDate.substring(4,6))>=8 && parseInt(todayDate.substring(4,6))<=10){
+                        xhr.open('GET', url3 + queryParams);     // 잡초류
+                        xhr.send();
+                        xhr.onreadystatechange = function () {
+                            if (this.readyState == 4) {
+                                var obj = JSON.parse(this.responseText);
+                                today = obj.response.body.items.item[0].today;
+                                tomorrow = obj.response.body.items.item[0].tomorrow;
+                                dayaftertomorrow = obj.response.body.items.item[0].dayaftertomorrow;
+                                $("#table tr:eq(3) td:eq(1)").html(today);
+                                $("#table tr:eq(3) td:eq(2)").html(tomorrow);
+                                $("#table tr:eq(3) td:eq(3)").html(dayaftertomorrow);
+                            }
+                        };
+                    }
+                }
                 document.getElementById('address').value = null;    // 주소 검색 창 리셋
             });
         });
@@ -185,26 +292,7 @@
                 }
             }, delay);
         })
-    </script>
-    <script>
-        var xhr = new XMLHttpRequest();
-        var url = 'https://cors-anywhere.herokuapp.com/http://apis.data.go.kr/1360000/HealthWthrIdxServiceV2/getOakPollenRiskIdxV2'; /*URL*/
-        var queryParams = '?' + encodeURIComponent('serviceKey') + '=' + 'h9LeXhaL6HnBJDW%2BmFYwoaQzexQrSgGK%2BjpLUNe%2BJwcD%2FhpbdvzrgkdmsQYh7wxno25wIg6jaFWaSzZP1S4TIQ%3D%3D'; /*Service Key*/
-        queryParams += '&' + encodeURIComponent('pageNo') + '=' + encodeURIComponent('1'); /*페이지번호*/
-        queryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent('10'); /*한 페이지 결과 수*/
-        queryParams += '&' + encodeURIComponent('dataType') + '=' + encodeURIComponent('JSON'); /*요청자료형식(XML/JSON)*/
-        queryParams += '&' + encodeURIComponent('areaNo') + '=' + encodeURIComponent('1100000000'); /*서울지점*/
-        queryParams += '&' + encodeURIComponent('time') + '=' + encodeURIComponent('2022051818'); /*‘22년 5월 18일 18시 발표*/
-        xhr.open('GET', url + queryParams);
-        xhr.send();
-        xhr.onreadystatechange = function () {
-            if (this.readyState == 4) {
-                var obj = JSON.parse(this.responseText);
-                console.log(obj.response.body.items.item[0])
-                console.log(obj.response.body.items.item[0].today , obj.response.body.items.item[0].tomorrow, obj.response.body.items.item[0].twodaysaftertomorrow);
-                // alert('Status: ' + this.status + ' Headers: ' + JSON.stringify(this.getAllResponseHeaders()) + ' Body: ' + this.responseText);
-            }
-        };
+
     </script>
 </body>
 

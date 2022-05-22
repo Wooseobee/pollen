@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <title>Document</title>
     <style>
-        body { text-align: center;}
         table {
             border-collapse: collapse;
+            margin: auto;
         }
         td, th {
             text-align: center;
-            padding: 5px;
+            padding: 10px;
             height: 20px;
             width: 100px;
             border: 1px solid black;
@@ -18,73 +18,70 @@
         thead, tfoot {
             background-color: lightgray;
         }
-        /* div {
-            display: inline-block;
-        } */
+        div {
+            margin-left: auto;
+            margin-right: auto;
+        }
     </style>
 </head>
 <body>
-    <div style="margin-left: 50px; margin-top: 50px;">
-        <div style="float: left; border: 2px solid white;">
-            <table id="table">
-                <thead>
-                    <tr>
-                        <th>종류</th>
-                        <th>오늘</th>
-                        <th>내일</th>
-                        <th>모레</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>꽃가루농도위험지수(참나무)</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                    </tr>
-                    <tr>
-                        <td>꽃가루농도위험지수(소나무)</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                    </tr>
-                    <tr>
-                        <td>높꽃가루농도위험지수(잡초류)</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div style=" float: left; border: 2px solid white; margin-left: 50px; margin-top: 50px;">
-            <table>
-                <thead>
-                    <tr>
-                        <th>단계</th>
-                        <th>지수범위</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>낮음</td>
-                        <td>0</td>
-                    </tr>
-                    <tr>
-                        <td>보통</td>
-                        <td>1</td>
-                    </tr>
-                    <tr>
-                        <td>높음</td>
-                        <td>2</td>
-                    </tr>
-                    <tr>
-                        <td>매우높음</td>
-                        <td>3</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+    <div style="display: table; margin-top: 20px;">
+        <table id="table" style="float: left;">
+            <thead>
+                <tr>
+                    <th>종류</th>
+                    <th>오늘</th>
+                    <th>내일</th>
+                    <th>모레</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>꽃가루농도위험지수(참나무)</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>꽃가루농도위험지수(소나무)</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>꽃가루농도위험지수(잡초류)</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                </tr>
+            </tbody>
+        </table>
+        <table style="float: left; margin-left: 20px; margin-top: 50px;">
+            <thead>
+                <tr>
+                    <th>단계</th>
+                    <th>지수범위</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>낮음</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>보통</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td>높음</td>
+                    <td>2</td>
+                </tr>
+                <tr>
+                    <td>매우높음</td>
+                    <td>3</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </body>
 </html>

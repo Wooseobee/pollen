@@ -68,16 +68,20 @@
             var today;
             var tomorrow;
             var dayaftertomorrow;
-
-            var yesterday = new Date(date.setDate(date.getDate() - 1));	// 어제
-            yesterday = yesterday.toISOString().substring(0,10).replace(/-/g,'');
+            var yesterday = 0;  // 어제면 1 오늘이면 0
             
-            if(date.getHours()<6){     // 06시 이전은 어제 18시 발표자료 불러오기
-                todayDate = yesterday;
+            // UTC 기준과 시차가 9시간이므로 우리나라 시간 09시가 지나야 우리나라 날짜와 UTC 날짜가 같아짐
+            if (date.getHours() < 9) {
                 todayDate += '18';
+                yesterday = 1;  // 어제 18시 데이터
             }
-            else {      // 06시 이후
+            else if (date.getHours() > 9 && date.getHours() <= 18) {
                 todayDate += '06';
+                yesterday = 0;  // 오늘 06시 데이터
+            }
+            else {
+                todayDate += '18';
+                yesterday = 0; // 오늘 18시 데이터
             }
 
             // 기존의 마커 제거
@@ -237,10 +241,17 @@
                             today = obj.response.body.items.item[0].today;
                             tomorrow = obj.response.body.items.item[0].tomorrow;
                             dayaftertomorrow = obj.response.body.items.item[0].dayaftertomorrow;
-                            $("#table tr:eq(1) td:eq(1)").html(today);
-                            $("#table tr:eq(1) td:eq(2)").html(tomorrow);
-                            $("#table tr:eq(1) td:eq(3)").html(dayaftertomorrow);
-                            console.log(obj);
+                            twodaysaftertomorrow = obj.response.body.items.item[0].twodaysaftertomorrow;
+                            if(yesterday==0){
+                                $("#table tr:eq(1) td:eq(1)").html(today);
+                                $("#table tr:eq(1) td:eq(2)").html(tomorrow);
+                                $("#table tr:eq(1) td:eq(3)").html(dayaftertomorrow);
+                            }
+                            else{
+                                $("#table tr:eq(1) td:eq(1)").html(tomorrow);
+                                $("#table tr:eq(1) td:eq(2)").html(dayaftertomorrow);
+                                $("#table tr:eq(1) td:eq(3)").html(twodaysaftertomorrow);
+                            }
                         }
                     };
                 }
@@ -272,10 +283,17 @@
                             today = obj.response.body.items.item[0].today;
                             tomorrow = obj.response.body.items.item[0].tomorrow;
                             dayaftertomorrow = obj.response.body.items.item[0].dayaftertomorrow;
-                            $("#table tr:eq(2) td:eq(1)").html(today);
-                            $("#table tr:eq(2) td:eq(2)").html(tomorrow);
-                            $("#table tr:eq(2) td:eq(3)").html(dayaftertomorrow);
-                            console.log(obj)
+                            twodaysaftertomorrow = obj.response.body.items.item[0].twodaysaftertomorrow;
+                            if(yesterday==0){
+                                $("#table tr:eq(1) td:eq(1)").html(today);
+                                $("#table tr:eq(1) td:eq(2)").html(tomorrow);
+                                $("#table tr:eq(1) td:eq(3)").html(dayaftertomorrow);
+                            }
+                            else{
+                                $("#table tr:eq(1) td:eq(1)").html(tomorrow);
+                                $("#table tr:eq(1) td:eq(2)").html(dayaftertomorrow);
+                                $("#table tr:eq(1) td:eq(3)").html(twodaysaftertomorrow);
+                            }
                         }
                     };
                 }
@@ -306,10 +324,17 @@
                             today = obj.response.body.items.item[0].today;
                             tomorrow = obj.response.body.items.item[0].tomorrow;
                             dayaftertomorrow = obj.response.body.items.item[0].dayaftertomorrow;
-                            $("#table tr:eq(3) td:eq(1)").html(today);
-                            $("#table tr:eq(3) td:eq(2)").html(tomorrow);
-                            $("#table tr:eq(3) td:eq(3)").html(dayaftertomorrow);
-                            console.log(obj);
+                            twodaysaftertomorrow = obj.response.body.items.item[0].twodaysaftertomorrow;
+                            if(yesterday==0){
+                                $("#table tr:eq(1) td:eq(1)").html(today);
+                                $("#table tr:eq(1) td:eq(2)").html(tomorrow);
+                                $("#table tr:eq(1) td:eq(3)").html(dayaftertomorrow);
+                            }
+                            else{
+                                $("#table tr:eq(1) td:eq(1)").html(tomorrow);
+                                $("#table tr:eq(1) td:eq(2)").html(dayaftertomorrow);
+                                $("#table tr:eq(1) td:eq(3)").html(twodaysaftertomorrow);
+                            }
                         }
                     };
                 }

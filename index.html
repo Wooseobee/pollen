@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"> <!--viewport 적용-->
     <script src="http://code.jquery.com/jquery-latest.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
     <script src="./area.js"></script>
@@ -24,8 +25,10 @@
         <input id="address" type="text" placeholder="검색할 주소" value="" size="30" style="line-height: 30px; font-size: 20px;"/>
         <input id="submit" type="button" value="주소 검색" style="height: 30px; font-size:20px;"/>
     </div>
-    <div id="map" style="width:100%;height:50%; padding: 10px;">
+    <div id="map" style="width:100%;height:60%; padding: 10px;">
     </div>
+    <div style="text-align: center; margin-top: 30px;"><strong><제공기간></strong></div>
+    <div style="text-align: center;">꽃가루농도위험지수: 참나무(4~6월), 소나무(4~6월), 잡초류(8~10월)</div>
 
     <div id="info" style="text-align: center; padding: 30px;"></div>
 
@@ -231,7 +234,7 @@
                     queryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent('10'); /*한 페이지 결과 수*/
                     queryParams += '&' + encodeURIComponent('dataType') + '=' + encodeURIComponent('JSON'); /*요청자료형식(XML/JSON)*/
                     queryParams += '&' + encodeURIComponent('areaNo') + '=' + encodeURIComponent(code); /*지점코드*/
-                    queryParams += '&' + encodeURIComponent('time') + '=' + encodeURIComponent(todayDate); /*22년 5월 18일 18시 발표*/
+                    queryParams += '&' + encodeURIComponent('time') + '=' + encodeURIComponent(todayDate);
                     
                     xhr.open('GET', url + queryParams);
                     xhr.send();
@@ -273,7 +276,7 @@
                     queryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent('10'); /*한 페이지 결과 수*/
                     queryParams += '&' + encodeURIComponent('dataType') + '=' + encodeURIComponent('JSON'); /*요청자료형식(XML/JSON)*/
                     queryParams += '&' + encodeURIComponent('areaNo') + '=' + encodeURIComponent(code); /*지점코드*/
-                    queryParams += '&' + encodeURIComponent('time') + '=' + encodeURIComponent(todayDate); /*22년 5월 18일 18시 발표*/
+                    queryParams += '&' + encodeURIComponent('time') + '=' + encodeURIComponent(todayDate);
 
                     xhr.open('GET', url + queryParams);
                     xhr.send();

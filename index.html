@@ -62,9 +62,10 @@
         var code = null;    // 지점 코드
 
         var flag = 0; // 주소검색인지 키워드검색인지 구분
+
+        var type = 0; // 참나무=1, 소나무=2, 잡초류=3
         $('#submit').click(function(){
 
-            
             var date = new Date();  // 현재 시간 설정
             var todayDate = date.toISOString().substring(0,10).replace(/-/g,'');
 
@@ -202,23 +203,27 @@
                             city = str.split(' ', 1)[0];
                             if(city =='서울')
                                 city += '특별시';
-
                             if(parseInt(todayDate.substring(4,6))>=4 && parseInt(todayDate.substring(4,6))<=6) {
-                                requestData1();
+                                var url = 'https://secret-hollows-44914.herokuapp.com/http://apis.data.go.kr/1360000/HealthWthrIdxServiceV2/getOakPollenRiskIdxV2';          // 참나무 요청 URL
+                                type = 1;
+                                requestData(url);
                             }
                             if(parseInt(todayDate.substring(4,6))>=4 && parseInt(todayDate.substring(4,6))<=6) {
-                                requestData2();
+                                var url = 'https://secret-hollows-44914.herokuapp.com/http://apis.data.go.kr/1360000/HealthWthrIdxServiceV2/getPinePollenRiskIdxV2';          // 소나무 요청 URL
+                                type = 2;
+                                requestData(url);
                             }
                             if(parseInt(todayDate.substring(4,6))>=8 && parseInt(todayDate.substring(4,6))<=10) {
-                                requestData3();
+                                var url = 'https://secret-hollows-44914.herokuapp.com/http://apis.data.go.kr/1360000/HealthWthrIdxServiceV2/getWeedsPollenRiskndxV2';       // 잡초류 요청 URL
+                                type = 3;
+                                requestData(url);
                             }
                         }
                     }
                     geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
                 }
 
-                function requestData1() {         // 참나무
-
+                function requestData(url) {
                     for (let index = 0; index < area.length; index++) {
                         const depth1 = area[index]['1단계'];
                         const depth2 = area[index]['2단계'];
@@ -228,13 +233,13 @@
                     }
 
                     var xhr = new XMLHttpRequest();
-                    var url = 'https://secret-hollows-44914.herokuapp.com/http://apis.data.go.kr/1360000/HealthWthrIdxServiceV2/getOakPollenRiskIdxV2'; /*URL1*/
+                    var url = url;
                     var queryParams = '?' + encodeURIComponent('serviceKey') + '=' + 'h9LeXhaL6HnBJDW%2BmFYwoaQzexQrSgGK%2BjpLUNe%2BJwcD%2FhpbdvzrgkdmsQYh7wxno25wIg6jaFWaSzZP1S4TIQ%3D%3D'; /*Service Key*/
                     queryParams += '&' + encodeURIComponent('pageNo') + '=' + encodeURIComponent('1'); /*페이지번호*/
                     queryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent('10'); /*한 페이지 결과 수*/
                     queryParams += '&' + encodeURIComponent('dataType') + '=' + encodeURIComponent('JSON'); /*요청자료형식(XML/JSON)*/
                     queryParams += '&' + encodeURIComponent('areaNo') + '=' + encodeURIComponent(code); /*지점코드*/
-                    queryParams += '&' + encodeURIComponent('time') + '=' + encodeURIComponent(todayDate);
+                    queryParams += '&' + encodeURIComponent('time') + '=' + encodeURIComponent(todayDate); /*오늘 날짜*/
                     
                     xhr.open('GET', url + queryParams);
                     xhr.send();
@@ -246,97 +251,38 @@
                             dayaftertomorrow = obj.response.body.items.item[0].dayaftertomorrow;
                             twodaysaftertomorrow = obj.response.body.items.item[0].twodaysaftertomorrow;
                             if(yesterday==0){
-                                $("#table tr:eq(1) td:eq(1)").html(today);
-                                $("#table tr:eq(1) td:eq(2)").html(tomorrow);
-                                $("#table tr:eq(1) td:eq(3)").html(dayaftertomorrow);
+                                if(type==1){    // 참나무 데이터 설정
+                                    $("#table tr:eq(1) td:eq(1)").html(today);
+                                    $("#table tr:eq(1) td:eq(2)").html(tomorrow);
+                                    $("#table tr:eq(1) td:eq(3)").html(dayaftertomorrow);
+                                }
+                                else if(type==2){    // 소나무 데이터 설정
+                                    $("#table tr:eq(2) td:eq(1)").html(today);
+                                    $("#table tr:eq(2) td:eq(2)").html(tomorrow);
+                                    $("#table tr:eq(2) td:eq(3)").html(dayaftertomorrow);
+                                }
+                                else if(type==3){    // 잡초류 데이터 설정
+                                    $("#table tr:eq(3) td:eq(1)").html(today);
+                                    $("#table tr:eq(3) td:eq(2)").html(tomorrow);
+                                    $("#table tr:eq(3) td:eq(3)").html(dayaftertomorrow);
+                                }
                             }
                             else{
-                                $("#table tr:eq(1) td:eq(1)").html(tomorrow);
-                                $("#table tr:eq(1) td:eq(2)").html(dayaftertomorrow);
-                                $("#table tr:eq(1) td:eq(3)").html(twodaysaftertomorrow);
-                            }
-                        }
-                    };
-                }
-
-                function requestData2() {        // 소나무
-
-                    for (let index = 0; index < area.length; index++) {
-                        const depth1 = area[index]['1단계'];
-                        const depth2 = area[index]['2단계'];
-                        if(depth1 == city && depth2 == gu) {
-                            code = area[index]['행정구역코드'];
-                        }
-                    }
-
-                    var xhr = new XMLHttpRequest();
-                    var url = 'https://secret-hollows-44914.herokuapp.com/http://apis.data.go.kr/1360000/HealthWthrIdxServiceV2/getPinePollenRiskIdxV2'; /*URL2*/
-                    var queryParams = '?' + encodeURIComponent('serviceKey') + '=' + 'h9LeXhaL6HnBJDW%2BmFYwoaQzexQrSgGK%2BjpLUNe%2BJwcD%2FhpbdvzrgkdmsQYh7wxno25wIg6jaFWaSzZP1S4TIQ%3D%3D'; /*Service Key*/
-                    queryParams += '&' + encodeURIComponent('pageNo') + '=' + encodeURIComponent('1'); /*페이지번호*/
-                    queryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent('10'); /*한 페이지 결과 수*/
-                    queryParams += '&' + encodeURIComponent('dataType') + '=' + encodeURIComponent('JSON'); /*요청자료형식(XML/JSON)*/
-                    queryParams += '&' + encodeURIComponent('areaNo') + '=' + encodeURIComponent(code); /*지점코드*/
-                    queryParams += '&' + encodeURIComponent('time') + '=' + encodeURIComponent(todayDate);
-
-                    xhr.open('GET', url + queryParams);
-                    xhr.send();
-                    xhr.onreadystatechange = function () {
-                        if (this.readyState == 4) {
-                            var obj = JSON.parse(this.responseText);
-                            today = obj.response.body.items.item[0].today;
-                            tomorrow = obj.response.body.items.item[0].tomorrow;
-                            dayaftertomorrow = obj.response.body.items.item[0].dayaftertomorrow;
-                            twodaysaftertomorrow = obj.response.body.items.item[0].twodaysaftertomorrow;
-                            if(yesterday==0){
-                                $("#table tr:eq(1) td:eq(1)").html(today);
-                                $("#table tr:eq(1) td:eq(2)").html(tomorrow);
-                                $("#table tr:eq(1) td:eq(3)").html(dayaftertomorrow);
-                            }
-                            else{
-                                $("#table tr:eq(1) td:eq(1)").html(tomorrow);
-                                $("#table tr:eq(1) td:eq(2)").html(dayaftertomorrow);
-                                $("#table tr:eq(1) td:eq(3)").html(twodaysaftertomorrow);
-                            }
-                        }
-                    };
-                }
-
-                function requestData3() {        // 잡초류
-
-                    for (let index = 0; index < area.length; index++) {
-                        const depth1 = area[index]['1단계'];
-                        const depth2 = area[index]['2단계'];
-                        if(depth1 == city && depth2 == gu) {
-                            code = area[index]['행정구역코드'];
-                        }
-                    }
-
-                    var xhr = new XMLHttpRequest();
-                    var url = 'https://secret-hollows-44914.herokuapp.com/http://apis.data.go.kr/1360000/HealthWthrIdxServiceV2/getWeedsPollenRiskndxV2'; /*URL3*/
-                    var queryParams = '?' + encodeURIComponent('serviceKey') + '=' + 'h9LeXhaL6HnBJDW%2BmFYwoaQzexQrSgGK%2BjpLUNe%2BJwcD%2FhpbdvzrgkdmsQYh7wxno25wIg6jaFWaSzZP1S4TIQ%3D%3D'; /*Service Key*/
-                    queryParams += '&' + encodeURIComponent('pageNo') + '=' + encodeURIComponent('1'); /*페이지번호*/
-                    queryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent('10'); /*한 페이지 결과 수*/
-                    queryParams += '&' + encodeURIComponent('dataType') + '=' + encodeURIComponent('JSON'); /*요청자료형식(XML/JSON)*/
-                    queryParams += '&' + encodeURIComponent('areaNo') + '=' + encodeURIComponent(code); /*지점코드*/
-                    queryParams += '&' + encodeURIComponent('time') + '=' + encodeURIComponent(todayDate); /*발표 시간*/
-                    xhr.open('GET', url + queryParams);
-                    xhr.send();
-                    xhr.onreadystatechange = function () {
-                        if (this.readyState == 4) {
-                            var obj = JSON.parse(this.responseText);
-                            today = obj.response.body.items.item[0].today;
-                            tomorrow = obj.response.body.items.item[0].tomorrow;
-                            dayaftertomorrow = obj.response.body.items.item[0].dayaftertomorrow;
-                            twodaysaftertomorrow = obj.response.body.items.item[0].twodaysaftertomorrow;
-                            if(yesterday==0){
-                                $("#table tr:eq(1) td:eq(1)").html(today);
-                                $("#table tr:eq(1) td:eq(2)").html(tomorrow);
-                                $("#table tr:eq(1) td:eq(3)").html(dayaftertomorrow);
-                            }
-                            else{
-                                $("#table tr:eq(1) td:eq(1)").html(tomorrow);
-                                $("#table tr:eq(1) td:eq(2)").html(dayaftertomorrow);
-                                $("#table tr:eq(1) td:eq(3)").html(twodaysaftertomorrow);
+                                if(type==1){    // 참나무 데이터 설정
+                                    $("#table tr:eq(1) td:eq(1)").html(tomorrow);
+                                    $("#table tr:eq(1) td:eq(2)").html(dayaftertomorrow);
+                                    $("#table tr:eq(1) td:eq(3)").html(twodaysaftertomorrow);
+                                }
+                                else if(type==2){    // 소나무 데이터 설정
+                                    $("#table tr:eq(2) td:eq(1)").html(tomorrow);
+                                    $("#table tr:eq(2) td:eq(2)").html(dayaftertomorrow);
+                                    $("#table tr:eq(2) td:eq(3)").html(twodaysaftertomorrow);
+                                }
+                                else if(type==3){    // 잡초류 데이터 설정
+                                    $("#table tr:eq(3) td:eq(1)").html(tomorrow);
+                                    $("#table tr:eq(3) td:eq(2)").html(dayaftertomorrow);
+                                    $("#table tr:eq(3) td:eq(3)").html(twodaysaftertomorrow);
+                                }
                             }
                         }
                     };

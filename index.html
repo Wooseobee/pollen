@@ -7,7 +7,7 @@
     <script src="http://code.jquery.com/jquery-latest.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
     <script src="./area.js"></script>
-    <title>주소로 장소 표시하기</title>
+    <title>꽃가루농도위험지수</title>
     <style>
     html, body { height: 100%;}
     input { line-height: 50px;}
@@ -68,7 +68,6 @@
 
             var date = new Date();  // 현재 시간 설정
             var todayDate = date.toISOString().substring(0,10).replace(/-/g,'');
-
             var today;
             var tomorrow;
             var dayaftertomorrow;
@@ -79,13 +78,9 @@
                 todayDate += '18';
                 yesterday = 1;  // 어제 18시 데이터
             }
-            else if (date.getHours() > 9 && date.getHours() <= 18) {
+            else if (date.getHours() >= 9 && date.getHours() <= 23) {
                 todayDate += '06';
                 yesterday = 0;  // 오늘 06시 데이터
-            }
-            else {
-                todayDate += '18';
-                yesterday = 0; // 오늘 18시 데이터
             }
 
             // 기존의 마커 제거
@@ -243,6 +238,19 @@
                     
                     xhr.open('GET', url + queryParams);
                     xhr.send();
+                    if(type==1||type==2){
+                        $("#table tr:eq(3) td:eq(1)").html("제공기간 X");
+                        $("#table tr:eq(3) td:eq(2)").html("제공기간 X");
+                        $("#table tr:eq(3) td:eq(3)").html("제공기간 X");
+                    }
+                    else {
+                        $("#table tr:eq(1) td:eq(1)").html("제공기간 X");
+                        $("#table tr:eq(1) td:eq(2)").html("제공기간 X");
+                        $("#table tr:eq(1) td:eq(3)").html("제공기간 X");
+                        $("#table tr:eq(2) td:eq(1)").html("제공기간 X");
+                        $("#table tr:eq(2) td:eq(2)").html("제공기간 X");
+                        $("#table tr:eq(2) td:eq(3)").html("제공기간 X");
+                    }
                     xhr.onreadystatechange = function () {
                         if (this.readyState == 4) {
                             var obj = JSON.parse(this.responseText);
@@ -250,6 +258,13 @@
                             tomorrow = obj.response.body.items.item[0].tomorrow;
                             dayaftertomorrow = obj.response.body.items.item[0].dayaftertomorrow;
                             twodaysaftertomorrow = obj.response.body.items.item[0].twodaysaftertomorrow;
+                            if(today==""){
+                                today='0';
+                            }
+                            if(twodaysaftertomorrow==""){
+                                twodaysaftertomorrow='0';
+                            }
+
                             if(yesterday==0){
                                 if(type==1){    // 참나무 데이터 설정
                                     $("#table tr:eq(1) td:eq(1)").html(today);

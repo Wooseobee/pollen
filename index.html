@@ -112,7 +112,7 @@
 
                 // 인포윈도우로 장소에 대한 설명을 표시합니다
                 var infowindow = new kakao.maps.InfoWindow({
-                    content: '<div id="place" style="width:150px;text-align:center;padding:6px 0;">' + $('#address').val() + '</div>'
+                    content: '<div id="place" style="height: 30px;width:150px;padding:6px 0;">'+ '<img src="./images/Best.png" style="height: 30px; padding: 0 6px 0 6px">' + $('#address').val() + '</div>'
                 });
                 marker.setMap(map);
                 markers.push(marker);   // 생성된 마커를 배열에 추가
@@ -163,7 +163,7 @@
 
                     // 인포윈도우로 장소에 대한 설명을 표시합니다
                     var infowindow = new kakao.maps.InfoWindow({
-                        content: '<div id="place1" style="width:150px; text-align:center; padding:6px 0;">' + place.place_name + '</div>'
+                        content: '<div id="place1" style="height: 30px;width:150px; padding:6px 0;">' + '<img src="./images/Best.png" style="height: 30px; padding: 0 6px 0 6px">' + place.place_name + '</div>'
                     });
                     marker.setMap(map);
                     markers.push(marker);   // 생성된 마커를 배열에 추가

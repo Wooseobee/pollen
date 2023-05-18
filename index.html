@@ -15,7 +15,7 @@
         }
 
         .search #address {
-            padding: 0 15px;
+            padding: 0 55px 0 15px;
             font-size: 15px;
             outline: none;
             border: none;
@@ -33,9 +33,14 @@
             box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22)
         }
 
-        @media (max-width: 750px) {
+        @media (max-width: 1440px) {
             #info {
                 display: none;
+            }
+        }
+        @media (max-width: 1440px) {
+            #address {
+                width: auto;
             }
         }
     </style>
@@ -50,7 +55,7 @@
 <body>
 <div id="map" style="width:100%;height:100%;">
     <div class="search" style="text-align: center;position: fixed;top: 30px;left: 30px;  z-index: 2">
-        <input id="address" type="text" placeholder="검색할 주소" value="" size="40" style="line-height: 50px;"/>
+        <input id="address" type="text" placeholder="검색할 주소" value="" size="40" style="line-height: 50px; width: 300px"/>
         <button id="submit" style="position: absolute; font-size: 10px; "><img src="./image/search.png" alt="검색" height="25" style="padding: 9px 9px"></button>
     </div>
 

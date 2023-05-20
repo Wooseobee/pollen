@@ -26,8 +26,6 @@ var gu = null;    // 구 단위로 지점 검색
 
 var code = null;    // 지점 코드
 
-var flag = 0; // 주소검색인지 키워드검색인지 구분
-
 var type = 0; // 참나무=1, 소나무=2, 잡초류=3
 
 $('#submit').click(function () {
@@ -67,8 +65,6 @@ $('#submit').click(function () {
 
         // 정상적으로 검색이 완료됐으면
         if (status === kakao.maps.services.Status.OK) {
-            flag = 0;
-
             coords = new kakao.maps.LatLng(result[0].y, result[0].x);
 
             let lat = result[0].y;
@@ -94,8 +90,6 @@ $('#submit').click(function () {
             // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
             map.setCenter(coords);
         } else {
-
-            flag = 1;
             // 장소 검색 객체를 생성합니다
             var ps = new kakao.maps.services.Places();
 
@@ -264,19 +258,3 @@ $('#submit').click(function () {
         document.getElementById('address').value = null;    // 주소 검색 창 리셋
     });
 });
-
-// 창 크기 조절 중 함수 실행 금지
-var timer = null;
-var delay = 300;
-
-$(window).resize(function () {
-    var mapContainer = document.getElementById('map');
-    clearTimeout(timer);
-    timer = setTimeout(function () {
-        if (flag == 0) {
-            map.setCenter(coords);
-        } else if (flag == 1) {
-            map.setCenter(place);
-        }
-    }, delay);
-})

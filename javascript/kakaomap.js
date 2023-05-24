@@ -123,7 +123,7 @@ function displayMarker(place) {
 
     // 인포윈도우로 장소에 대한 설명을 표시합니다
     var infowindow = new kakao.maps.InfoWindow({
-        content: '<div id="infoWindow" style="position: relative; display: flex; align-items: center;border-radius: 4px;height: 60px;width:200px; padding:14px 10px;box-shadow: 0 0 3px 3px cornflowerblue; background-color: cornflowerblue">'
+        content: '<div id="infoWindow" style="position: relative; display: flex; align-items: center;border-radius: 4px;height: 60px;width:200px; padding:14px 10px;box-shadow: 0 0 3px 3px darkgray; background-color: darkgray">'
             + '<img id="icon" src="./images/best.png" style="width: 55px; height: 55px;">'
             + '<div id="place" style="display: block;font-size: 13px;text-align: center; color: white; padding: 5px">' + name
             + '<div id="type1" style="display: none;font-size: 13px; text-align: center; color: white">' + '참나무: ' + '<span id="type1Level" style="font-size: 24px"></span>' + '</div>'
@@ -272,10 +272,14 @@ function requestData(url, type) {
                 var imageSrc = './images/' + matchingImage(max) + '.png';
                 console.log(imageSrc);
                 $("#icon").attr("src", imageSrc);
+                $("#infoWindow").css("background-color", matchingBackGroundColor(max));
+                $("#infoWindow").css("box-shadow", "0 0 3px 3px" + matchingBackGroundColor(max));
             } else if (yesterday == 1 && max < tomorrow) {
                 max = tomorrow
                 var imageSrc = './images/' + matchingImage(max) + '.png';
                 $("#icon").attr("src", imageSrc);
+                $("#infoWindow").css("background-color", matchingBackGroundColor(max));
+                $("#infoWindow").css("box-shadow", "0 0 3px 3px" + matchingBackGroundColor(max));
             }
         }
     };
@@ -304,5 +308,18 @@ function matchingImage(level) {
             return 'bad';
         case '3':
             return 'worst';
+    }
+}
+
+function matchingBackGroundColor(level){
+    switch (level) {
+        case '0':
+            return '#0978d2';
+        case '1':
+            return '#f1c349';
+        case '2':
+            return '#f17d13';
+        case '3':
+            return '#d21414';
     }
 }

@@ -24,8 +24,6 @@ var gu = null;    // 구 단위로 지점 검색
 
 var code = null;    // 지점 코드
 
-var type = 0; // 참나무=1, 소나무=2, 잡초류=3
-
 var date = null;
 
 var todayDate = null;
@@ -163,25 +161,22 @@ function getAddr(lat, lng) {
                 city += '특별시';
             if (parseInt(todayDate.substring(4, 6)) >= 4 && parseInt(todayDate.substring(4, 6)) <= 6) {
                 var url = 'http://localhost:8080/oak';          // 참나무 요청 URL
-                type = 1;
-                requestData(url);
+                requestData(url, 1);
             }
             if (parseInt(todayDate.substring(4, 6)) >= 4 && parseInt(todayDate.substring(4, 6)) <= 6) {
                 var url = 'http://localhost:8080/pine';          // 소나무 요청 URL
-                type = 2;
-                requestData(url);
+                requestData(url, 2);
             }
             if (parseInt(todayDate.substring(4, 6)) >= 8 && parseInt(todayDate.substring(4, 6)) <= 10) {
                 var url = 'http://localhsot:8080/weeds';       // 잡초류 요청 URL
-                type = 3;
-                requestData(url);
+                requestData(url, 3);
             }
         }
     }
     geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
 }
 
-function requestData(url) {
+function requestData(url, type) {
     for (let index = 0; index < area.length; index++) {
         const depth1 = area[index]['1단계'];
         const depth2 = area[index]['2단계'];
@@ -197,6 +192,7 @@ function requestData(url) {
 
     xhr.open('GET', url + queryParams);
     xhr.send();
+    // type : 참나무=1, 소나무=2, 잡초류=3
     if (type == 1 || type == 2) {
         $("#table tr:eq(3) td:eq(1)").html("제공기간 X");
         $("#table tr:eq(3) td:eq(2)").html("제공기간 X");
@@ -220,19 +216,6 @@ function requestData(url) {
             dayaftertomorrow = obj.response.body.items.item[0].dayaftertomorrow;
             twodaysaftertomorrow = obj.response.body.items.item[0].twodaysaftertomorrow;
 
-            if (this.responseURL.includes('oak')){
-                if (today=="") $("#type1Level").text(tomorrow);
-                else $("#type1Level").text(today);
-            }
-            if (this.responseURL.includes('pine')){
-                if (today=="") $("#type2Level").text(tomorrow);
-                else $("#type2Level").text(today);
-            }
-            if (this.responseURL.includes('weeds')){
-                if (today=="") $("#type3Level").text(tomorrow);
-                else $("#type3Level").text(today);
-            }
-
             if (today == "") {
                 today = '0';
             }
@@ -240,35 +223,60 @@ function requestData(url) {
                 twodaysaftertomorrow = '0';
             }
 
-            if (yesterday == 0) {
-                if (type == 1) {    // 참나무 데이터 설정
+            var level = null;
+            if (type == 1) {     // 참나무 데이터 설정
+                if (yesterday == 0) {
                     $("#table tr:eq(1) td:eq(1)").html(today);
                     $("#table tr:eq(1) td:eq(2)").html(tomorrow);
                     $("#table tr:eq(1) td:eq(3)").html(dayaftertomorrow);
-                } else if (type == 2) {    // 소나무 데이터 설정
-                    $("#table tr:eq(2) td:eq(1)").html(today);
-                    $("#table tr:eq(2) td:eq(2)").html(tomorrow);
-                    $("#table tr:eq(2) td:eq(3)").html(dayaftertomorrow);
-                } else if (type == 3) {    // 잡초류 데이터 설정
-                    $("#table tr:eq(3) td:eq(1)").html(today);
-                    $("#table tr:eq(3) td:eq(2)").html(tomorrow);
-                    $("#table tr:eq(3) td:eq(3)").html(dayaftertomorrow);
-                }
-            } else {
-                if (type == 1) {    // 참나무 데이터 설정
+                    level = matchingImage(today);
+                } else {
                     $("#table tr:eq(1) td:eq(1)").html(tomorrow);
                     $("#table tr:eq(1) td:eq(2)").html(dayaftertomorrow);
                     $("#table tr:eq(1) td:eq(3)").html(twodaysaftertomorrow);
-                } else if (type == 2) {    // 소나무 데이터 설정
+                    level = matchingImage(tomorrow);
+                }
+                $("#type1Level").text(level);
+            } else if (type == 2) {    // 소나무 데이터 설정
+                if (yesterday == 0) {
+                    $("#table tr:eq(2) td:eq(1)").html(today);
+                    $("#table tr:eq(2) td:eq(2)").html(tomorrow);
+                    $("#table tr:eq(2) td:eq(3)").html(dayaftertomorrow);
+                    level = matchingImage(today);
+                } else {
                     $("#table tr:eq(2) td:eq(1)").html(tomorrow);
                     $("#table tr:eq(2) td:eq(2)").html(dayaftertomorrow);
                     $("#table tr:eq(2) td:eq(3)").html(twodaysaftertomorrow);
-                } else if (type == 3) {    // 잡초류 데이터 설정
+                    level = matchingImage(tomorrow);
+                }
+                $("#type2Level").text(level);
+            } else if (type == 3) {    // 잡초류 데이터 설정
+                if (yesterday == 0) {
+                    $("#table tr:eq(3) td:eq(1)").html(today);
+                    $("#table tr:eq(3) td:eq(2)").html(tomorrow);
+                    $("#table tr:eq(3) td:eq(3)").html(dayaftertomorrow);
+                    level = matchingImage(today);
+                } else {
                     $("#table tr:eq(3) td:eq(1)").html(tomorrow);
                     $("#table tr:eq(3) td:eq(2)").html(dayaftertomorrow);
                     $("#table tr:eq(3) td:eq(3)").html(twodaysaftertomorrow);
+                    level = matchingImage(tomorrow);
                 }
+                $("#type3Level").text(level);
             }
         }
     };
+}
+
+function matchingImage(level){
+    switch (level){
+        case '0':
+            return '낮음';
+        case '1':
+            return '보통';
+        case '2':
+            return '높음';
+        case '3':
+            return '매우 높음';
+    }
 }

@@ -270,7 +270,6 @@ function requestData(url, type) {
             if (yesterday == 0 && max < today) {
                 max = today;
                 var imageSrc = './images/' + matchingImage(max) + '.png';
-                console.log(imageSrc);
                 $("#icon").attr("src", imageSrc);
                 $("#infoWindow").css("background-color", matchingBackGroundColor(max));
                 $("#infoWindow").css("box-shadow", "0 0 3px 3px" + matchingBackGroundColor(max));

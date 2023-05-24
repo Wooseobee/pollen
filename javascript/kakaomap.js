@@ -12,8 +12,6 @@ var geocoder = new kakao.maps.services.Geocoder();
 
 var coords = null;
 
-var place = null;
-
 var markers = []; // 마커 전체적으로 통제
 
 var infoWindows = [];    // infoWindow 전체적으로 통제
@@ -99,7 +97,7 @@ $('#submit').click(function () {
 function placesSearchCB(data, status) {
     if (status === kakao.maps.services.Status.OK) {
 
-        place = new kakao.maps.LatLng(data[0].y, data[0].x);
+        coords = new kakao.maps.LatLng(data[0].y, data[0].x);
 
         getAddr(data[0].y, data[0].x);
 
@@ -153,6 +151,7 @@ function getAddr(lat, lng) {
                 gu = result[0].road_address.region_2depth_name;
             }
             city = str.split(' ', 1)[0];
+            gu = gu.split(' ').join('');
             if (city == '서울')
                 city += '특별시';
             if (parseInt(todayDate.substring(4, 6)) >= 4 && parseInt(todayDate.substring(4, 6)) <= 6) {

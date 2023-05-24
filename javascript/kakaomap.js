@@ -123,7 +123,14 @@ function displayMarker(place) {
 
     // 인포윈도우로 장소에 대한 설명을 표시합니다
     var infowindow = new kakao.maps.InfoWindow({
-        content: '<div id="place1" style="height: 30px;width:150px; padding:6px 0;">' + '<img src="./images/Best.png" style="height: 30px; padding: 0 6px 0 6px">' + name + '</div>'
+        content: '<div id="infoWindow" style="position: relative; display: flex; align-items: center;border-radius: 4px;height: 60px;width:200px; padding:14px 10px;box-shadow: 0 0 3px 3px cornflowerblue; background-color: cornflowerblue">'
+            + '<img id="icon" src="./images/best.png" style="width: 55px; height: 55px;">'
+            + '<div id="place" style="display: block;font-size: 13px;text-align: center; color: white; padding: 5px">' + name
+            + '<div id="type1" style="display: none;font-size: 13px; text-align: center; color: white">' + '참나무: ' + '<span id="type1Level" style="font-size: 24px"></span>' + '</div>'
+            + '<div id="type2" style="display: none;font-size: 13px; text-align: center; color: white">' + '소나무: ' + '<span id="type2Level" style="font-size: 24px"></span>' + '</div>'
+            + '<div id="type3" style="display: none;font-size: 13px; text-align: center; color: white">' + '잡초류: ' + '<span id="type3Level" style="font-size: 24px"></span>' + '</div>'
+            + '</div>'
+            + '</div>'
     });
     marker.setMap(map);
     markers.push(marker);   // 생성된 마커를 배열에 추가
@@ -198,6 +205,8 @@ function requestData(url) {
         $("#table tr:eq(3) td:eq(1)").html("제공기간 X");
         $("#table tr:eq(3) td:eq(2)").html("제공기간 X");
         $("#table tr:eq(3) td:eq(3)").html("제공기간 X");
+        $("#type1").css('display', 'block');
+        $("#type2").css('display', 'block');
     } else {
         $("#table tr:eq(1) td:eq(1)").html("제공기간 X");
         $("#table tr:eq(1) td:eq(2)").html("제공기간 X");
@@ -205,6 +214,7 @@ function requestData(url) {
         $("#table tr:eq(2) td:eq(1)").html("제공기간 X");
         $("#table tr:eq(2) td:eq(2)").html("제공기간 X");
         $("#table tr:eq(2) td:eq(3)").html("제공기간 X");
+        $("#type3").css('display', 'block');
     }
     xhr.onreadystatechange = function () {
         if (this.readyState == 4) {
@@ -213,6 +223,20 @@ function requestData(url) {
             tomorrow = obj.response.body.items.item[0].tomorrow;
             dayaftertomorrow = obj.response.body.items.item[0].dayaftertomorrow;
             twodaysaftertomorrow = obj.response.body.items.item[0].twodaysaftertomorrow;
+
+            if (this.responseURL.includes('oak')){
+                if (today=="") $("#type1Level").text(tomorrow);
+                else $("#type1Level").text(today);
+            }
+            if (this.responseURL.includes('pine')){
+                if (today=="") $("#type2Level").text(tomorrow);
+                else $("#type2Level").text(today);
+            }
+            if (this.responseURL.includes('weeds')){
+                if (today=="") $("#type3Level").text(tomorrow);
+                else $("#type3Level").text(today);
+            }
+
             if (today == "") {
                 today = '0';
             }

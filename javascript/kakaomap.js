@@ -229,12 +229,12 @@ function requestData(url, type) {
                     $("#table tr:eq(1) td:eq(1)").html(today);
                     $("#table tr:eq(1) td:eq(2)").html(tomorrow);
                     $("#table tr:eq(1) td:eq(3)").html(dayaftertomorrow);
-                    level = matchingImage(today);
+                    level = matchingLevel(today);
                 } else {
                     $("#table tr:eq(1) td:eq(1)").html(tomorrow);
                     $("#table tr:eq(1) td:eq(2)").html(dayaftertomorrow);
                     $("#table tr:eq(1) td:eq(3)").html(twodaysaftertomorrow);
-                    level = matchingImage(tomorrow);
+                    level = matchingLevel(tomorrow);
                 }
                 $("#type1Level").text(level);
             } else if (type == 2) {    // 소나무 데이터 설정
@@ -242,12 +242,12 @@ function requestData(url, type) {
                     $("#table tr:eq(2) td:eq(1)").html(today);
                     $("#table tr:eq(2) td:eq(2)").html(tomorrow);
                     $("#table tr:eq(2) td:eq(3)").html(dayaftertomorrow);
-                    level = matchingImage(today);
+                    level = matchingLevel(today);
                 } else {
                     $("#table tr:eq(2) td:eq(1)").html(tomorrow);
                     $("#table tr:eq(2) td:eq(2)").html(dayaftertomorrow);
                     $("#table tr:eq(2) td:eq(3)").html(twodaysaftertomorrow);
-                    level = matchingImage(tomorrow);
+                    level = matchingLevel(tomorrow);
                 }
                 $("#type2Level").text(level);
             } else if (type == 3) {    // 잡초류 데이터 설정
@@ -255,12 +255,12 @@ function requestData(url, type) {
                     $("#table tr:eq(3) td:eq(1)").html(today);
                     $("#table tr:eq(3) td:eq(2)").html(tomorrow);
                     $("#table tr:eq(3) td:eq(3)").html(dayaftertomorrow);
-                    level = matchingImage(today);
+                    level = matchingLevel(today);
                 } else {
                     $("#table tr:eq(3) td:eq(1)").html(tomorrow);
                     $("#table tr:eq(3) td:eq(2)").html(dayaftertomorrow);
                     $("#table tr:eq(3) td:eq(3)").html(twodaysaftertomorrow);
-                    level = matchingImage(tomorrow);
+                    level = matchingLevel(tomorrow);
                 }
                 $("#type3Level").text(level);
             }
@@ -268,7 +268,7 @@ function requestData(url, type) {
     };
 }
 
-function matchingImage(level){
+function matchingLevel(level){
     switch (level){
         case '0':
             return '낮음';

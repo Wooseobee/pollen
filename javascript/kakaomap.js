@@ -162,17 +162,17 @@ function getAddr(lat, lng) {
             if (city == '서울')
                 city += '특별시';
             if (parseInt(todayDate.substring(4, 6)) >= 4 && parseInt(todayDate.substring(4, 6)) <= 6) {
-                var url = 'https://secret-hollows-44914.herokuapp.com/http://apis.data.go.kr/1360000/HealthWthrIdxServiceV2/getOakPollenRiskIdxV2';          // 참나무 요청 URL
+                var url = 'http://localhost:8080/oak';          // 참나무 요청 URL
                 type = 1;
                 requestData(url);
             }
             if (parseInt(todayDate.substring(4, 6)) >= 4 && parseInt(todayDate.substring(4, 6)) <= 6) {
-                var url = 'https://secret-hollows-44914.herokuapp.com/http://apis.data.go.kr/1360000/HealthWthrIdxServiceV2/getPinePollenRiskIdxV2';          // 소나무 요청 URL
+                var url = 'http://localhost:8080/pine';          // 소나무 요청 URL
                 type = 2;
                 requestData(url);
             }
             if (parseInt(todayDate.substring(4, 6)) >= 8 && parseInt(todayDate.substring(4, 6)) <= 10) {
-                var url = 'https://secret-hollows-44914.herokuapp.com/http://apis.data.go.kr/1360000/HealthWthrIdxServiceV2/getWeedsPollenRiskndxV2';       // 잡초류 요청 URL
+                var url = 'http://localhsot:8080/weeds';       // 잡초류 요청 URL
                 type = 3;
                 requestData(url);
             }
@@ -192,11 +192,7 @@ function requestData(url) {
 
     var xhr = new XMLHttpRequest();
     var url = url;
-    var queryParams = '?' + encodeURIComponent('serviceKey') + '=' + 'h9LeXhaL6HnBJDW%2BmFYwoaQzexQrSgGK%2BjpLUNe%2BJwcD%2FhpbdvzrgkdmsQYh7wxno25wIg6jaFWaSzZP1S4TIQ%3D%3D'; /*Service Key*/
-    queryParams += '&' + encodeURIComponent('pageNo') + '=' + encodeURIComponent('1'); /*페이지번호*/
-    queryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent('10'); /*한 페이지 결과 수*/
-    queryParams += '&' + encodeURIComponent('dataType') + '=' + encodeURIComponent('JSON'); /*요청자료형식(XML/JSON)*/
-    queryParams += '&' + encodeURIComponent('areaNo') + '=' + encodeURIComponent(code); /*지점코드*/
+    var queryParams = '?' + encodeURIComponent('areaNo') + '=' + encodeURIComponent(code)
     queryParams += '&' + encodeURIComponent('time') + '=' + encodeURIComponent(todayDate); /*오늘 날짜*/
 
     xhr.open('GET', url + queryParams);

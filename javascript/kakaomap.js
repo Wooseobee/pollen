@@ -38,6 +38,8 @@ var yesterday = 0;  // 어제면 1 오늘이면 0
 
 var name = null;
 
+var max = -1;
+
 $('#submit').click(function () {
 
     date = new Date();  // 현재 시간 설정
@@ -264,6 +266,17 @@ function requestData(url, type) {
                 }
                 $("#type3Level").text(level);
             }
+
+            if (yesterday == 0 && max < today) {
+                max = today;
+                var imageSrc = './images/' + matchingImage(max) + '.png';
+                console.log(imageSrc);
+                $("#icon").attr("src", imageSrc);
+            } else if (yesterday == 1 && max < tomorrow) {
+                max = tomorrow
+                var imageSrc = './images/' + matchingImage(max) + '.png';
+                $("#icon").attr("src", imageSrc);
+            }
         }
     };
 }
@@ -278,5 +291,18 @@ function matchingLevel(level){
             return '높음';
         case '3':
             return '매우 높음';
+    }
+}
+
+function matchingImage(level) {
+    switch (level) {
+        case '0':
+            return 'best';
+        case '1':
+            return 'good';
+        case '2':
+            return 'bad';
+        case '3':
+            return 'worst';
     }
 }

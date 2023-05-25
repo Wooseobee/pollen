@@ -139,7 +139,7 @@ function displayMarker(place) {
 
     infowindow.open(map, marker);
     infoWindows.push(infowindow);   // 생성된 infoWindow 배열에 추가
-    map.setLevel(4);
+    map.setLevel(4, {animate: true});
 
     // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
     map.setCenter(coords);

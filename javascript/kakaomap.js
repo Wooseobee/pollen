@@ -1,11 +1,12 @@
 var mapContainer = document.getElementById('map'), // 지도를 표시할 div
     mapOption = {
-        center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
-        level: 3 // 지도의 확대 레벨
+        center: new kakao.maps.LatLng(36.34, 127.5), // 지도의 중심좌표
+        level: 12 // 지도의 확대 레벨
     };
 
 // 지도를 생성합니다
 var map = new kakao.maps.Map(mapContainer, mapOption);
+map.setMaxLevel(13);
 
 // 주소-좌표 변환 객체를 생성합니다
 var geocoder = new kakao.maps.services.Geocoder();
@@ -138,6 +139,7 @@ function displayMarker(place) {
 
     infowindow.open(map, marker);
     infoWindows.push(infowindow);   // 생성된 infoWindow 배열에 추가
+    map.setLevel(4);
 
     // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
     map.setCenter(coords);

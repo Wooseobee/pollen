@@ -164,15 +164,15 @@ function getAddr(lat, lng) {
             if (city == '서울')
                 city += '특별시';
             if (parseInt(todayDate.substring(4, 6)) >= 4 && parseInt(todayDate.substring(4, 6)) <= 6) {
-                var url = 'http://localhost:8080/oak';          // 참나무 요청 URL
+                var url = 'https://wooseobee.com/oak';          // 참나무 요청 URL
                 requestData(url, 1);
             }
             if (parseInt(todayDate.substring(4, 6)) >= 4 && parseInt(todayDate.substring(4, 6)) <= 6) {
-                var url = 'http://localhost:8080/pine';          // 소나무 요청 URL
+                var url = 'https://wooseobee.com/pine';          // 소나무 요청 URL
                 requestData(url, 2);
             }
             if (parseInt(todayDate.substring(4, 6)) >= 8 && parseInt(todayDate.substring(4, 6)) <= 10) {
-                var url = 'http://localhsot:8080/weeds';       // 잡초류 요청 URL
+                var url = 'https://wooseobee.com/weeds';       // 잡초류 요청 URL
                 requestData(url, 3);
             }
         }

@@ -271,17 +271,13 @@ function requestData(url, type) {
 
             if (yesterday == 0 && max < today) {
                 max = today;
-                var imageSrc = './images/' + matchingImage(max) + '.png';
-                $("#icon").attr("src", imageSrc);
-                $("#infoWindow").css("background-color", matchingBackGroundColor(max));
-                $("#infoWindow").css("box-shadow", "0 0 3px 3px" + matchingBackGroundColor(max));
             } else if (yesterday == 1 && max < tomorrow) {
                 max = tomorrow
-                var imageSrc = './images/' + matchingImage(max) + '.png';
-                $("#icon").attr("src", imageSrc);
-                $("#infoWindow").css("background-color", matchingBackGroundColor(max));
-                $("#infoWindow").css("box-shadow", "0 0 3px 3px" + matchingBackGroundColor(max));
             }
+            var imageSrc = './images/' + matchingImage(max) + '.png';
+            $("#icon").attr("src", imageSrc);
+            $("#infoWindow").css("background-color", matchingBackGroundColor(max));
+            $("#infoWindow").css("box-shadow", "0 0 3px 3px" + matchingBackGroundColor(max));
         }
     };
 }

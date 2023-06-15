@@ -42,6 +42,14 @@ var name = null;
 var max = -1;
 
 $('#submit').click(submitData);
+document.getElementById('address').addEventListener('keypress', event => eventHandler(event));
+
+function eventHandler(event) {
+    let key = event.key || event.keyCode;
+    if (key == 'Enter' || key === 13) {
+        submitData();
+    }
+}
 
 function submitData () {
     date = new Date();  // 현재 시간 설정

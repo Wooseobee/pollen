@@ -41,8 +41,9 @@ var name = null;
 
 var max = -1;
 
-$('#submit').click(function () {
+$('#submit').click(submitData);
 
+function submitData () {
     date = new Date();  // 현재 시간 설정
     todayDate = date.toISOString().substring(0, 10).replace(/-/g, '');
 
@@ -92,7 +93,7 @@ $('#submit').click(function () {
 
         document.getElementById('address').value = null;    // 주소 검색 창 리셋
     });
-});
+}
 
 // 키워드 검색 완료 시 호출되는 콜백함수 입니다
 function placesSearchCB(data, status) {

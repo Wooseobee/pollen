@@ -142,11 +142,11 @@ function placesSearchCB(data, status) {
 }
 
 // 지도에 마커를 표시하는 함수입니다
-function displayMarker(place) {
+function displayMarker(place, lat, lng) {
     // 마커를 생성하고 지도에 표시합니다
     var marker = new kakao.maps.Marker({
         map: map,
-        position: new kakao.maps.LatLng(place.y, place.x)
+        position: new kakao.maps.LatLng(lat, lng)
     });
 
     // 인포윈도우로 장소에 대한 설명을 표시합니다
@@ -191,7 +191,7 @@ function callback(result, status) {
             gu = result[0].road_address.region_2depth_name;
         }
         name = str;
-        displayMarker(result[0]);
+        displayMarker(result[0], coords.getLat(), coords.getLng());
         city = str.split(' ', 1)[0];
         gu = gu.split(' ').join('');
         if (city == '서울')

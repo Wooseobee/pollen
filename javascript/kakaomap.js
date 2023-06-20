@@ -51,6 +51,21 @@ function eventHandler(event) {
     }
 }
 
+// HTML5의 geolocation으로 사용할 수 있는지 확인합니다
+if (navigator.geolocation) {
+    setDate();
+
+    resetMap();
+
+    // GeoLocation을 이용해서 접속 위치를 얻어옵니다
+    navigator.geolocation.getCurrentPosition(function (position) {
+        var lat = position.coords.latitude, // 위도
+            lng = position.coords.longitude; // 경도
+        coords = new kakao.maps.LatLng(lat, lng);
+        geocoder.coord2Address(lng, lat, callback);
+    });
+}
+
 function setDate () {
     date = new Date();  // 현재 시간 설정
     todayDate = date.toISOString().substring(0, 10).replace(/-/g, '');
@@ -96,8 +111,6 @@ function submitData () {
             let lng = result[0].x;
 
             getAddr(lat, lng);   // 추출한 좌표를 통해 도로명 주소 추출
-            name = $('#address').val();
-            displayMarker(result[0]);
 
         } else {
             // 장소 검색 객체를 생성합니다
@@ -125,9 +138,6 @@ function placesSearchCB(data, status) {
         bounds.extend(new kakao.maps.LatLng(data[0].y, data[0].x));
         // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
         map.setBounds(bounds);
-
-        name = data[0].place_name;
-        displayMarker(data[0]);
     }
 }
 
@@ -166,35 +176,39 @@ function getAddr(lat, lng) {
     let geocoder = new kakao.maps.services.Geocoder();
 
     let coord = new kakao.maps.LatLng(lat, lng);
-    let callback = function (result, status) {
-        if (status === kakao.maps.services.Status.OK) {
-            let str;
-            if (result[0].road_address == null) {      // 도로명 주소 유무
-                str = result[0].address.address_name;
-                gu = result[0].address.region_2depth_name;
-            } else {
-                str = result[0].road_address.address_name;
-                gu = result[0].road_address.region_2depth_name;
-            }
-            city = str.split(' ', 1)[0];
-            gu = gu.split(' ').join('');
-            if (city == '서울')
-                city += '특별시';
-            if (parseInt(todayDate.substring(4, 6)) >= 4 && parseInt(todayDate.substring(4, 6)) <= 6) {
-                var url = 'https://wooseobee.com/oak';          // 참나무 요청 URL
-                requestData(url, 1);
-            }
-            if (parseInt(todayDate.substring(4, 6)) >= 4 && parseInt(todayDate.substring(4, 6)) <= 6) {
-                var url = 'https://wooseobee.com/pine';          // 소나무 요청 URL
-                requestData(url, 2);
-            }
-            if (parseInt(todayDate.substring(4, 6)) >= 8 && parseInt(todayDate.substring(4, 6)) <= 10) {
-                var url = 'https://wooseobee.com/weeds';       // 잡초류 요청 URL
-                requestData(url, 3);
-            }
+
+    geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
+}
+
+function callback(result, status) {
+    if (status === kakao.maps.services.Status.OK) {
+        let str;
+        if (result[0].road_address == null) {      // 도로명 주소 유무
+            str = result[0].address.address_name;
+            gu = result[0].address.region_2depth_name;
+        } else {
+            str = result[0].road_address.address_name;
+            gu = result[0].road_address.region_2depth_name;
+        }
+        name = str;
+        displayMarker(result[0]);
+        city = str.split(' ', 1)[0];
+        gu = gu.split(' ').join('');
+        if (city == '서울')
+            city += '특별시';
+        if (parseInt(todayDate.substring(4, 6)) >= 4 && parseInt(todayDate.substring(4, 6)) <= 6) {
+            var url = 'https://wooseobee.com/oak';          // 참나무 요청 URL
+            requestData(url, 1);
+        }
+        if (parseInt(todayDate.substring(4, 6)) >= 4 && parseInt(todayDate.substring(4, 6)) <= 6) {
+            var url = 'https://wooseobee.com/pine';          // 소나무 요청 URL
+            requestData(url, 2);
+        }
+        if (parseInt(todayDate.substring(4, 6)) >= 8 && parseInt(todayDate.substring(4, 6)) <= 10) {
+            var url = 'https://wooseobee.com/weeds';       // 잡초류 요청 URL
+            requestData(url, 3);
         }
     }
-    geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
 }
 
 function requestData(url, type) {

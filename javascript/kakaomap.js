@@ -51,7 +51,7 @@ function eventHandler(event) {
     }
 }
 
-function submitData () {
+function setDate () {
     date = new Date();  // 현재 시간 설정
     todayDate = date.toISOString().substring(0, 10).replace(/-/g, '');
 
@@ -63,7 +63,9 @@ function submitData () {
         todayDate += '06';
         yesterday = 0;  // 오늘 06시 데이터
     }
+}
 
+function resetMap() {
     // 기존의 마커 제거
     if (markers.length != 0) {
         for (var i = 0; i < markers.length; i++) {
@@ -77,6 +79,12 @@ function submitData () {
             infoWindows[i].close();
         }
     }
+}
+
+function submitData () {
+    setDate();
+
+    resetMap();
 
     // 주소로 좌표를 검색합니다
     geocoder.addressSearch($('#address').val(), function (result, status) {

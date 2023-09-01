@@ -70,11 +70,10 @@ function setDate () {
     date = new Date();  // 현재 시간 설정
     todayDate = date.toISOString().substring(0, 10).replace(/-/g, '');
 
-    // UTC 기준과 시차가 9시간이므로 우리나라 시간 09시가 지나야 우리나라 날짜와 UTC 날짜가 같아짐
-    if (date.getHours() < 9) {
+    if (date.getHours() < 6) {  // 06시 이전
         todayDate += '18';
         yesterday = 1;  // 어제 18시 데이터
-    } else if (date.getHours() >= 9 && date.getHours() <= 23) {
+    } else {    // 06시 이후
         todayDate += '06';
         yesterday = 0;  // 오늘 06시 데이터
     }

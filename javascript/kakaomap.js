@@ -220,7 +220,6 @@ function requestData(url, type) {
     }
 
     var xhr = new XMLHttpRequest();
-    var url = url;
     var queryParams = '?' + encodeURIComponent('areaNo') + '=' + encodeURIComponent(code)
     queryParams += '&' + encodeURIComponent('time') + '=' + encodeURIComponent(todayDate); /*오늘 날짜*/
 

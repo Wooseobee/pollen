@@ -270,6 +270,7 @@ function requestData(url, type) {
                 level = matchingLevel(today);
                 $("#type3Level").text(level);
             }
+            max = 0;
 
             if (max < today) {
                 max = today;

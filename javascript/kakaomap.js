@@ -29,17 +29,17 @@ var date = null;
 
 var todayDate = null;
 
-var today = null
+var today = 0
 
-var tomorrow = null
+var tomorrow = 0
 
-var dayaftertomorrow = null;
+var dayaftertomorrow = 0;
 
 var yesterday = 0;  // 어제면 1 오늘이면 0
 
 var name = null;
 
-var max = -1;
+var max = 0;
 
 $('#submit').click(submitData);
 document.getElementById('address').addEventListener('keypress', event => eventHandler(event));
@@ -220,8 +220,7 @@ function requestData(url, type) {
     }
 
     var xhr = new XMLHttpRequest();
-    var queryParams = '?' + encodeURIComponent('areaNo') + '=' + encodeURIComponent(code)
-    queryParams += '&' + encodeURIComponent('time') + '=' + encodeURIComponent(todayDate); /*오늘 날짜*/
+    var queryParams = '?' + encodeURIComponent('areaNo') + '=' + encodeURIComponent(code);
 
     xhr.open('GET', url + queryParams);
     xhr.send();
@@ -243,65 +242,37 @@ function requestData(url, type) {
     }
     xhr.onreadystatechange = function () {
         if (this.readyState == 4) {
-            var obj = JSON.parse(this.responseText);
-            today = obj.response.body.items.item[0].today;
-            tomorrow = obj.response.body.items.item[0].tomorrow;
-            dayaftertomorrow = obj.response.body.items.item[0].dayaftertomorrow;
-            twodaysaftertomorrow = obj.response.body.items.item[0].twodaysaftertomorrow;
-
-            if (today == "") {
-                today = '0';
-            }
-            if (twodaysaftertomorrow == "") {
-                twodaysaftertomorrow = '0';
+            var obj = this.responseText;
+            if(obj != null) {
+                obj = JSON.parse(this.responseText);
+                today = obj.today;
+                tomorrow = obj.tomorrow;
+                dayaftertomorrow = obj.dayaftertomorrow;
             }
 
             var level = null;
             if (type == 1) {     // 참나무 데이터 설정
-                if (yesterday == 0) {
-                    $("#table tr:eq(1) td:eq(1)").html(today);
-                    $("#table tr:eq(1) td:eq(2)").html(tomorrow);
-                    $("#table tr:eq(1) td:eq(3)").html(dayaftertomorrow);
-                    level = matchingLevel(today);
-                } else {
-                    $("#table tr:eq(1) td:eq(1)").html(tomorrow);
-                    $("#table tr:eq(1) td:eq(2)").html(dayaftertomorrow);
-                    $("#table tr:eq(1) td:eq(3)").html(twodaysaftertomorrow);
-                    level = matchingLevel(tomorrow);
-                }
+                $("#table tr:eq(1) td:eq(1)").html(today);
+                $("#table tr:eq(1) td:eq(2)").html(tomorrow);
+                $("#table tr:eq(1) td:eq(3)").html(dayaftertomorrow);
+                level = matchingLevel(today);
                 $("#type1Level").text(level);
             } else if (type == 2) {    // 소나무 데이터 설정
-                if (yesterday == 0) {
-                    $("#table tr:eq(2) td:eq(1)").html(today);
-                    $("#table tr:eq(2) td:eq(2)").html(tomorrow);
-                    $("#table tr:eq(2) td:eq(3)").html(dayaftertomorrow);
-                    level = matchingLevel(today);
-                } else {
-                    $("#table tr:eq(2) td:eq(1)").html(tomorrow);
-                    $("#table tr:eq(2) td:eq(2)").html(dayaftertomorrow);
-                    $("#table tr:eq(2) td:eq(3)").html(twodaysaftertomorrow);
-                    level = matchingLevel(tomorrow);
-                }
+                $("#table tr:eq(2) td:eq(1)").html(today);
+                $("#table tr:eq(2) td:eq(2)").html(tomorrow);
+                $("#table tr:eq(2) td:eq(3)").html(dayaftertomorrow);
+                level = matchingLevel(today);
                 $("#type2Level").text(level);
             } else if (type == 3) {    // 잡초류 데이터 설정
-                if (yesterday == 0) {
-                    $("#table tr:eq(3) td:eq(1)").html(today);
-                    $("#table tr:eq(3) td:eq(2)").html(tomorrow);
-                    $("#table tr:eq(3) td:eq(3)").html(dayaftertomorrow);
-                    level = matchingLevel(today);
-                } else {
-                    $("#table tr:eq(3) td:eq(1)").html(tomorrow);
-                    $("#table tr:eq(3) td:eq(2)").html(dayaftertomorrow);
-                    $("#table tr:eq(3) td:eq(3)").html(twodaysaftertomorrow);
-                    level = matchingLevel(tomorrow);
-                }
+                $("#table tr:eq(3) td:eq(1)").html(today);
+                $("#table tr:eq(3) td:eq(2)").html(tomorrow);
+                $("#table tr:eq(3) td:eq(3)").html(dayaftertomorrow);
+                level = matchingLevel(today);
                 $("#type3Level").text(level);
             }
 
-            if (yesterday == 0 && max < today) {
+            if (max < today) {
                 max = today;
-            } else if (yesterday == 1 && max < tomorrow) {
-                max = tomorrow
             }
             var imageSrc = './images/' + matchingImage(max) + '.png';
             $("#icon").attr("src", imageSrc);
@@ -313,39 +284,39 @@ function requestData(url, type) {
 
 function matchingLevel(level){
     switch (level){
-        case '0':
+        case 0:
             return '낮음';
-        case '1':
+        case 1:
             return '보통';
-        case '2':
+        case 2:
             return '높음';
-        case '3':
+        case 3:
             return '매우 높음';
     }
 }
 
 function matchingImage(level) {
     switch (level) {
-        case '0':
+        case 0:
             return 'best';
-        case '1':
+        case 1:
             return 'good';
-        case '2':
+        case 2:
             return 'bad';
-        case '3':
+        case 3:
             return 'worst';
     }
 }
 
 function matchingBackGroundColor(level){
     switch (level) {
-        case '0':
+        case 0:
             return '#0978d2';
-        case '1':
+        case 1:
             return '#f1c349';
-        case '2':
+        case 2:
             return '#f17d13';
-        case '3':
+        case 3:
             return '#d21414';
     }
 }

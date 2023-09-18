@@ -190,6 +190,7 @@ function callback(result, status) {
             gu = result[0].road_address.region_2depth_name;
         }
         name = str;
+        max = 0;
         displayMarker(result[0], coords.getLat(), coords.getLng());
         city = str.split(' ', 1)[0];
         gu = gu.split(' ').join('');
@@ -270,7 +271,6 @@ function requestData(url, type) {
                 level = matchingLevel(today);
                 $("#type3Level").text(level);
             }
-            max = 0;
 
             if (max < today) {
                 max = today;

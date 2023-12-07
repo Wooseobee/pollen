@@ -64,7 +64,7 @@ function isPine() {
 }
 
 function isWeeds() {
-    return parseInt(todayDate.substring(4, 6)) >= 8 && parseInt(todayDate.substring(4, 6)) <= 10;
+    return parseInt(todayDate.substring(4, 6)) >= 8 && parseInt(todayDate.substring(4, 6)) <= 12;
 }
 
 function fetchInitData() {
@@ -76,7 +76,7 @@ function fetchInitData() {
     let lat, lng, maxLevel, str;
 
     if (isOak() && isPine()) {
-        url = 'https://wooseobee.com/init';          // 소나무 요청 URL
+        url = 'https://wooseobee.com/init';          // 참나무, 소나무 요청 URL
     }
     if (isWeeds()) {
         url = 'https://wooseobee.com/init';       // 잡초류 요청 URL

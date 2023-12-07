@@ -82,6 +82,7 @@ function fetchInitData() {
         url = 'https://wooseobee.com/init';       // 잡초류 요청 URL
     }
 
+    if (url == null) return;
     var xhr = new XMLHttpRequest();
 
     xhr.open('GET', url);

@@ -95,7 +95,6 @@ function fetchInitData() {
                 obj = JSON.parse(this.responseText);
                 for (let i = 0; i < obj.data.length; i++) {
                     areaNo = obj.data[i].areaNo
-                    console.log(areaNo)
                     if (areaNo === "1100000000") {
                         lat = 37.5635694;
                         lng = 126.9800083;

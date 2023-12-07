@@ -44,11 +44,120 @@ var max = 0;
 $('#submit').click(submitData);
 document.getElementById('address').addEventListener('keypress', event => eventHandler(event));
 
+window.onload = function () {
+    fetchInitData();
+}
+
 function eventHandler(event) {
     let key = event.key || event.keyCode;
-    if (key == 'Enter' || key === 13) {
+    if (key === 'Enter' || key === 13) {
         submitData();
     }
+}
+
+function isOak() {
+    return parseInt(todayDate.substring(4, 6)) >= 4 && parseInt(todayDate.substring(4, 6)) <= 6;
+}
+
+function isPine() {
+    return parseInt(todayDate.substring(4, 6)) >= 4 && parseInt(todayDate.substring(4, 6)) <= 6;
+}
+
+function isWeeds() {
+    return parseInt(todayDate.substring(4, 6)) >= 8 && parseInt(todayDate.substring(4, 6)) <= 10;
+}
+
+function fetchInitData() {
+    setDate();
+
+    resetMap();
+
+    let url;
+    let lat, lng, maxLevel, str;
+
+    if (isOak() && isPine()) {
+        url = 'https://wooseobee.com/init';          // 소나무 요청 URL
+    }
+    if (isWeeds()) {
+        url = 'https://wooseobee.com/init';       // 잡초류 요청 URL
+    }
+
+    var xhr = new XMLHttpRequest();
+
+    xhr.open('GET', url);
+    xhr.send();
+    xhr.onreadystatechange = function () {
+        let areaNo;
+        if (this.readyState === 4) {
+            var obj = this.responseText;
+            if (obj != null) {
+                obj = JSON.parse(this.responseText);
+                for (let i = 0; i < obj.data.length; i++) {
+                    areaNo = obj.data[i].areaNo
+                    console.log(areaNo)
+                    if (areaNo === "1100000000") {
+                        lat = 37.5635694;
+                        lng = 126.9800083;
+                        str = "서울특별시 중구 소공로 96";
+                    } else if (areaNo === "2600000000") {
+                        lat = 35.1770194;
+                        lng = 129.0769527;
+                        str = "부산광역시 연제구 연제로 21";
+                    } else if (areaNo === "2700000000") {
+                        lat = 35.8685416;
+                        lng = 128.6035527;
+                        str = "대구광역시 중구 국채보상로 670";
+                    } else if (areaNo === "2900000000") {
+                        lat = 35.1569749;
+                        lng = 126.8533638;
+                        str = "광주 서구 치평동 1207";
+                    } else if (areaNo === "3000000000") {
+                        lat = 36.3471194;
+                        lng = 127.3865666;
+                        str = "대전 서구 탄방동 1447-1";
+                    } else if (areaNo === "4215000000") {
+                        lat = 37.7491361;
+                        lng = 128.8784972;
+                        str = "강원특별자치도 강릉시 홍제동 332-6";
+                    } else if (areaNo === "5000000000") {
+                        lat = 33.4856944;
+                        lng = 126.5003333;
+                        str = "제주특별자치도 제주시 선덕로5길 37";
+                    } else {
+                        continue;
+                    }
+
+                    let coord = new kakao.maps.LatLng(lat, lng);
+
+                    maxLevel = obj.data[i].max
+
+                    var level = matchingLevel(maxLevel);
+                    var img = matchingImage(maxLevel);
+                    var backgroundColor = matchingBackGroundColor(maxLevel);
+                    var boxShadow = matchingBackGroundColor(maxLevel);
+
+                    // 인포윈도우로 장소에 대한 설명을 표시합니다
+                    var infowindow = new kakao.maps.InfoWindow({
+                        map: map,
+                        position: coord,
+                        content: `<div id="infoWindow" style="position: relative; display: flex; align-items: center;border-radius: 4px;height: 60px;width:200px; padding:14px 10px;box-shadow: 0 0 3px 3px ${boxShadow}; background-color: ${backgroundColor}">`
+                            + `<img id="icon" src="./images/${img}.png" style="width: 55px; height: 55px;">`
+                            + '<div id="place" style="display: block;font-size: 13px;text-align: center; color: white; padding: 5px">' + str
+                            + `<div id="type1" style="display: ${isOak() ? "block" : "none"};font-size: 13px; text-align: center; color: white">참나무:<span id="type1Level" style="font-size: 24px">${isOak() ? level : ''}</span></div>`
+                            + `<div id="type2" style="display: ${isPine() ? "block" : "none"};font-size: 13px; text-align: center; color: white">소나무:<span id="type2Level" style="font-size: 24px">${isPine() ? level : ''}</span></div>`
+                            + `<div id="type3" style="display: ${isWeeds() ? "block" : "none"};font-size: 13px; text-align: center; color: white">잡초류:<span id="type3Level" style="font-size: 24px">${isWeeds() ? level : ''}</span></div>`
+                            + '</div>'
+                            + '</div>'
+                    });
+
+                    infoWindows.push(infowindow);   // 생성된 infoWindow 배열에 추가
+
+                }
+            }
+        }
+    };
+
+
 }
 
 // HTML5의 geolocation으로 사용할 수 있는지 확인합니다
@@ -81,14 +190,14 @@ function setDate () {
 
 function resetMap() {
     // 기존의 마커 제거
-    if (markers.length != 0) {
+    if (markers.length !== 0) {
         for (var i = 0; i < markers.length; i++) {
             markers[i].setMap(null);
         }
     }
 
     // 기존의 infoWindow 제거
-    if (infoWindows.length != 0) {
+    if (infoWindows.length !== 0) {
         for (var i = 0; i < infoWindows.length; i++) {
             infoWindows[i].close();
         }
@@ -194,17 +303,17 @@ function callback(result, status) {
         displayMarker(result[0], coords.getLat(), coords.getLng());
         city = str.split(' ', 1)[0];
         gu = gu.split(' ').join('');
-        if (city == '서울')
+        if (city === '서울')
             city += '특별시';
-        if (parseInt(todayDate.substring(4, 6)) >= 4 && parseInt(todayDate.substring(4, 6)) <= 6) {
+        if (isOak()) {
             var url = 'https://wooseobee.com/oak';          // 참나무 요청 URL
             requestData(url, 1);
         }
-        if (parseInt(todayDate.substring(4, 6)) >= 4 && parseInt(todayDate.substring(4, 6)) <= 6) {
+        if (isPine()) {
             var url = 'https://wooseobee.com/pine';          // 소나무 요청 URL
             requestData(url, 2);
         }
-        if (parseInt(todayDate.substring(4, 6)) >= 8 && parseInt(todayDate.substring(4, 6)) <= 10) {
+        if (isWeeds()) {
             var url = 'https://wooseobee.com/weeds';       // 잡초류 요청 URL
             requestData(url, 3);
         }
@@ -215,7 +324,7 @@ function requestData(url, type) {
     for (let index = 0; index < area.length; index++) {
         const depth1 = area[index]['1단계'];
         const depth2 = area[index]['2단계'];
-        if (depth1 == city && depth2 == gu) {
+        if (depth1 === city && depth2 === gu) {
             code = area[index]['행정구역코드'];
         }
     }
@@ -226,7 +335,7 @@ function requestData(url, type) {
     xhr.open('GET', url + queryParams);
     xhr.send();
     // type : 참나무=1, 소나무=2, 잡초류=3
-    if (type == 1 || type == 2) {
+    if (type === 1 || type === 2) {
         $("#table tr:eq(3) td:eq(1)").html("제공기간 X");
         $("#table tr:eq(3) td:eq(2)").html("제공기간 X");
         $("#table tr:eq(3) td:eq(3)").html("제공기간 X");
@@ -242,7 +351,7 @@ function requestData(url, type) {
         $("#type3").css('display', 'block');
     }
     xhr.onreadystatechange = function () {
-        if (this.readyState == 4) {
+        if (this.readyState === 4) {
             var obj = this.responseText;
             if(obj != null) {
                 obj = JSON.parse(this.responseText);
@@ -252,19 +361,19 @@ function requestData(url, type) {
             }
 
             var level = null;
-            if (type == 1) {     // 참나무 데이터 설정
+            if (type === 1) {     // 참나무 데이터 설정
                 $("#table tr:eq(1) td:eq(1)").html(today);
                 $("#table tr:eq(1) td:eq(2)").html(tomorrow);
                 $("#table tr:eq(1) td:eq(3)").html(dayaftertomorrow);
                 level = matchingLevel(today);
                 $("#type1Level").text(level);
-            } else if (type == 2) {    // 소나무 데이터 설정
+            } else if (type === 2) {    // 소나무 데이터 설정
                 $("#table tr:eq(2) td:eq(1)").html(today);
                 $("#table tr:eq(2) td:eq(2)").html(tomorrow);
                 $("#table tr:eq(2) td:eq(3)").html(dayaftertomorrow);
                 level = matchingLevel(today);
                 $("#type2Level").text(level);
-            } else if (type == 3) {    // 잡초류 데이터 설정
+            } else if (type === 3) {    // 잡초류 데이터 설정
                 $("#table tr:eq(3) td:eq(1)").html(today);
                 $("#table tr:eq(3) td:eq(2)").html(tomorrow);
                 $("#table tr:eq(3) td:eq(3)").html(dayaftertomorrow);

@@ -78,10 +78,10 @@ function fetchInitData() {
     let lat, lng, maxLevel, str;
 
     if (isOak() && isPine()) {
-        url = 'https://wooseobee.com/init';          // 참나무, 소나무 요청 URL
+        url = 'https://wooseobee.com/pollen_service/init';          // 참나무, 소나무 요청 URL
     }
     if (isWeeds()) {
-        url = 'https://wooseobee.com/init';       // 잡초류 요청 URL
+        url = 'https://wooseobee.com/pollen_service/init';       // 잡초류 요청 URL
     }
 
     if (url == null) return;
@@ -308,15 +308,15 @@ function callback(result, status) {
         if (city === '서울')
             city += '특별시';
         if (isOak()) {
-            var url = 'https://wooseobee.com/oak';          // 참나무 요청 URL
+            var url = 'https://wooseobee.com/pollen_service/oak';          // 참나무 요청 URL
             requestData(url, 1);
         }
         if (isPine()) {
-            var url = 'https://wooseobee.com/pine';          // 소나무 요청 URL
+            var url = 'https://wooseobee.com/pollen_service/pine';          // 소나무 요청 URL
             requestData(url, 2);
         }
         if (isWeeds()) {
-            var url = 'https://wooseobee.com/weeds';       // 잡초류 요청 URL
+            var url = 'https://wooseobee.com/pollen_service/weeds';       // 잡초류 요청 URL
             requestData(url, 3);
         }
     }

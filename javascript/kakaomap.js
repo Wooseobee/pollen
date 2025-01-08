@@ -76,11 +76,11 @@ function isPine() {
 }
 
 function isWeeds() {
-  return (
-    parseInt(todayDate.substring(4, 6)) >= 8 &&
-    parseInt(todayDate.substring(4, 6)) <= 12
-  );
-  // return true;
+  // return (
+  //   parseInt(todayDate.substring(4, 6)) >= 8 &&
+  //   parseInt(todayDate.substring(4, 6)) <= 10
+  // );
+  return true;
 }
 
 function fetchInitData() {

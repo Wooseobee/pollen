@@ -47,7 +47,6 @@ document
   .addEventListener("keypress", (event) => eventHandler(event));
 
 window.onload = function () {
-  fetchInitData();
   alert(
     "꽃가루농도지수 제공 기간 : 4~6월 / 8월~10월 \n" +
       "현재는 테스트 기간입니다."

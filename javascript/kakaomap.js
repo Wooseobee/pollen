@@ -46,12 +46,16 @@ document
   .getElementById("address")
   .addEventListener("keypress", (event) => eventHandler(event));
 
+/**
+ * 
+ * 테스트 기간 종료
 window.onload = function () {
   alert(
     "꽃가루농도지수 제공 기간 : 4~6월 / 8월~10월 \n" +
       "현재는 테스트 기간입니다."
   );
 };
+ */
 
 function eventHandler(event) {
   let key = event.key || event.keyCode;
@@ -75,11 +79,11 @@ function isPine() {
 }
 
 function isWeeds() {
-  // return (
-  //   parseInt(todayDate.substring(4, 6)) >= 8 &&
-  //   parseInt(todayDate.substring(4, 6)) <= 10
-  // );
-  return true;
+  return (
+    parseInt(todayDate.substring(4, 6)) >= 8 &&
+    parseInt(todayDate.substring(4, 6)) <= 10
+  );
+  // return true;
 }
 
 function fetchInitData() {
